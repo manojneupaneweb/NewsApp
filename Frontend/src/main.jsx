@@ -7,7 +7,7 @@ import axios from "axios";
 // Importing Components
 import App from "./App";
 import Home from "./features/Pages/Home.jsx";
-import Profile from "./features/UserProfile/Profile.jsx";
+
 
 // Nav Imports
 import Travel from "./features/Pages/nav/Travel.jsx";
@@ -35,7 +35,7 @@ import Signup from "./features/Auth/Signup.jsx";
 import Login from "./features/Auth/Login.jsx";
 import AuthProvider from "./utils/AuthProvider.jsx";
 
-
+import Profile from "./features/UserProfile/Profile.jsx";
 axios.defaults.baseURL = `http://localhost:3000`;
 axios.defaults.withCredentials = true;
 
@@ -64,15 +64,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "", element: <Home /> },
-      {
-        path: "profile",
-        element: (
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        ),
-      },
-      { path: "world", element: <World /> },
+       { path: "world", element: <World /> },
       { path: "sports", element: <Sports /> },
       { path: "technology", element: <Technology /> },
       { path: "business", element: <Business /> },
@@ -81,6 +73,15 @@ const router = createBrowserRouter([
       { path: "science", element: <Science /> },
       { path: "travel", element: <Travel /> },
       { path: "opinion", element: <Opinion /> },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
+     
     ],
   },
   {

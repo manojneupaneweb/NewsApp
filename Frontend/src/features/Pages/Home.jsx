@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import logo from "../../assets/images/logo JPEG.jpg";
 import axios from 'axios';
+import { FaTimes } from "react-icons/fa";
 import moment from "moment";
 
- function Home() {
+function Home() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -22,21 +23,39 @@ import moment from "moment";
         fetchPosts();
     }, []);
 
+    // Set the state for popup visibility, and set to null when closed
+    const [visible, setVisible] = useState(true);
+
     return (
         <main>
-            {/* Categories Section */}
-            <section className="bg-slate-100 py-4 px-5 md:px-20">
-                <div className="flex flex-wrap gap-4 justify-center">
-                    {["World", "Finance", "Technology", "Business", "Entertainment", "Sports", "Health", "Science", "Travel", "Opinion"].map((category) => (
-                        <p
-                            key={category}
-                            className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold shadow-md hover:bg-blue-200 cursor-pointer transition duration-200"
-                        >
-                            {category}
-                        </p>
-                    ))}
-                </div>
-            </section>
+            {visible && (
+                <section className='Disclaimer'>
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+                        <div className=" bg-white border border-red-400 text-black-700 px-6 py-5 rounded-lg shadow-lg relative w-11/12 h-60 sm:w-2/3 md:w-1/2 transition-transform duration-300 scale-100 animate-fadeIn">
+                            <p className="font-bold text-lg text-center">📢 Disclaimer</p>
+                            <p className="text-lg mt-2 text-center">
+                                यो समाचार कुनै आधिकारिक स्रोतबाट पुष्टि गरिएको होइन।
+                                <br /> यो केवल शैक्षिक उद्देश्यको लागि बनाइएको हो। कृपया आधिकारिक स्रोतबाट जानकारी लिनुहोस्।
+                                <br />
+                                यदि कुनै ligel issued भएमा जीममेबार हुने छैन । 
+                            </p>
+                            <p className="mt-3 text-center">
+                                Contact:{" "}
+                                <a
+                                    href="https://manoj-neupane.com.np"
+                                    className="text-blue-700 underline"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Manoj Neupane
+                                </a>
+                            </p>
+                            <button onClick={() => setVisible(false)} 
+                            className="absolute  right-4 font-bold bg-slate-300 py-3 px-6 rounded-sm text-red-700 hover:bg-slate-200">OK</button>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Marquee Section */}
             <div>
@@ -210,7 +229,7 @@ import moment from "moment";
                     ))}
                 </div>
             </section>
-           
+
 
 
             {/* Opinion Section */}
@@ -241,8 +260,8 @@ import moment from "moment";
                 <p className="text-lg font-bold text-gray-700">Advertisement</p>
             </div>
 
-            
+
         </main>
     )
 };
- export default Home;
+export default Home;

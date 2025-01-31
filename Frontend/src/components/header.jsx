@@ -17,15 +17,49 @@ function Header() {
   const toggleDropdown = () => setIsOpen(!isOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const [nepaliDateTime, setNepaliDateTime] = useState({
+    date: "",
+    time: "",
+  });
 
-  const today = new Date();
-  const dateBS = new NepaliDate(today);
+  useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date();
+      const nepaliDate = new NepaliDate(now);
+      const dayOfWeek = [
+        "आइतबार ",
+        "सोमबार ",
+        "मंगलबार ",
+        "बुधबार",
+        "बिहीबार",
+        "शुक्रबार",
+        "शनिबार ",
+      ];
+
+      // Format time in HH:mm format
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes
+        }: ${seconds}`;
+
+      setNepaliDateTime({
+        date: (
+          <>
+            {nepaliDate.format("YYYY/MM/DD")}
+            <br />
+            {dayOfWeek[now.getDay()]}
+          </>
+        ),
+        time: formattedTime,
+      });
+    };
+
+    updateDateTime(); // Initial call to set the time immediately
+    const interval = setInterval(updateDateTime, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, []);
 
   const fetchProfile = async () => {
     try {
@@ -89,8 +123,8 @@ function Header() {
             <p>Advertisement</p>
           </div>
           <div className="text-sm font-Kantipur">
-            <span className="font-bold">{time}</span> <br />
-            <span>{dateBS.format("YYYY-MM-DD")}</span>
+          <p> {nepaliDateTime.date}</p>
+          <p>{nepaliDateTime.time}</p>
           </div>
         </div>
       </header>
@@ -106,9 +140,8 @@ function Header() {
 
         {/* Navigation Links */}
         <ul
-          className={`flex flex-col sm:flex-row items-center gap-4 text-white font-bold text-sm sm:text-base ${
-            menuOpen ? "block" : "hidden sm:flex"
-          }`}
+          className={`flex flex-col sm:flex-row items-center gap-4 text-white font-bold text-sm sm:text-base ${menuOpen ? "block" : "hidden sm:flex"
+            }`}
         >
           <li><Link to="/">Home</Link></li>
           <li><Link to="/world">World</Link></li>

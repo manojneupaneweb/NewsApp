@@ -27,7 +27,7 @@ import AdminLayout from "./features/Admin/AdminLayout.jsx";
 import AdminList from "./features/Admin/AdminList.jsx";
 import AddManagement from "./features/Admin/AddManagement.jsx";
 import AllPosts from "./features/Admin/AllPosts.jsx";
-import EditPost from "./features/Admin/EditPost.jsx";
+import EditPost from "./features/Admin/Editpost.jsx";
 
 //Auth Pages
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";

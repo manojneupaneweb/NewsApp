@@ -97,7 +97,7 @@ function Header() {
         <div className="flex flex-wrap bg-red-600 px-4 sm:px-10 justify-between items-center h-7 text-white text-sm">
           <div className="flex items-center gap-4">
             <span>
-              <i className="fa-solid fa-phone"></i> 9805748392839
+              <i className="fa-solid fa-phone"></i> 9800000000
             </span>
             <span>
               <i className="fa-solid fa-envelope"></i> newsapp@gmail.com

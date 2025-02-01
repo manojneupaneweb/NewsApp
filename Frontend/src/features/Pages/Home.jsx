@@ -29,15 +29,17 @@ function Home() {
     return (
         <main>
             {visible && (
-                <section className='Disclaimer'>
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-                        <div className=" bg-white border border-red-400 text-black-700 px-6 py-5 rounded-lg shadow-lg relative w-11/12 h-60 sm:w-2/3 md:w-1/2 transition-transform duration-300 scale-100 animate-fadeIn">
-                            <p className="font-bold text-lg text-center">📢 Disclaimer</p>
+                <section className="Disclaimer">
+                    <div
+                        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50"
+                        aria-hidden="true"
+                    >
+                        <div className="bg-white border border-red-400 text-gray-800 px-6 py-6 rounded-lg shadow-lg relative w-11/12 h-60 sm:w-2/3 md:w-1/2 transition-transform duration-300 scale-100 animate-fadeIn">
+                            <h2 className="font-bold text-lg text-center">📢 Disclaimer</h2>
                             <p className="text-lg mt-2 text-center">
-                                यो समाचार कुनै आधिकारिक स्रोतबाट पुष्टि गरिएको होइन।
-                                <br /> यो केवल शैक्षिक उद्देश्यको लागि बनाइएको हो। कृपया आधिकारिक स्रोतबाट जानकारी लिनुहोस्।
-                                <br />
-                                यदि कुनै ligel issued भएमा जीममेबार हुने छैन । 
+                                यो समाचार कुनै आधिकारिक स्रोतबाट पुष्टि गरिएको होइन।<br />
+                                यो केवल शैक्षिक उद्देश्यको लागि बनाइएको हो। कृपया आधिकारिक स्रोतबाट जानकारी लिनुहोस्।<br />
+                                यदि कुनै कानूनी समस्या उत्पन्न भएमा जिम्मेवार हुने छैन।
                             </p>
                             <p className="mt-3 text-center">
                                 Contact:{" "}
@@ -50,12 +52,17 @@ function Home() {
                                     Manoj Neupane
                                 </a>
                             </p>
-                            <button onClick={() => setVisible(false)} 
-                            className="absolute  right-4 font-bold bg-slate-300 py-3 px-6 rounded-sm text-red-700 hover:bg-slate-200">OK</button>
+                            <button
+                                onClick={() => setVisible(false)}
+                                className="absolute right-4 bottom-4 font-bold bg-gray-300 py-2 px-5 rounded text-red-700 hover:bg-gray-200 transition"
+                            >
+                                OK
+                            </button>
                         </div>
                     </div>
                 </section>
             )}
+
 
             {/* Marquee Section */}
             <div>

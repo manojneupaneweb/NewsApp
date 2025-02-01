@@ -3,11 +3,12 @@ import fs from 'fs';
 
 // Cloudinary configuration
 cloudinary.v2.config({
-    cloud_name: 'dfkgzdnnc',
-    api_key: '955313683614897',
-    api_secret: 'pm6pb-ceo1ai2vgfXfGQ_7kY8E0',
+    cloud_name: process.env.CLOUDENIRAY_cloud_name,
+    api_key: process.env.CLOUDENIRAY_api_key,
+    api_secret: process.env.CLOUDENIRAY_api_secret,
     secure: true,
 });
+
 
 // Function to upload an image to Cloudinary
 const uploadOnCloudinary = async (localFilePath) => {
@@ -16,6 +17,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         // Optionally delete the local file after uploading
         fs.unlinkSync(localFilePath);  
         console.log("Upload successful");
+        console.log( process.env.CLOUDENIRAY_cloud_name);
         return response.secure_url;  // Return the Cloudinary URL of the uploaded image
     } catch (error) {
         console.log("Error uploading to Cloudinary:", error.message);

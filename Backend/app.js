@@ -8,12 +8,11 @@ const app = express()
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-    ],
-    credentials: true, // Allow credentials (cookies)
+    origin: process.env.CORS_ORIGIN.split(","), // Read origins from .env and convert to array
+    credentials: true,
   })
 );
+
 
 
 app.use(express.json())

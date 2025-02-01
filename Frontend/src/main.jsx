@@ -27,7 +27,7 @@ import AdminLayout from "./features/Admin/AdminLayout.jsx";
 import AdminList from "./features/Admin/AdminList.jsx";
 import AddManagement from "./features/Admin/AddManagement.jsx";
 import AllPosts from "./features/Admin/AllPosts.jsx";
-import EditPost from "./features/Admin/Editpost.jsx";
+import EditPost from "./features/Admin/EditPost.jsx";
 
 //Auth Pages
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
@@ -36,8 +36,14 @@ import Login from "./features/Auth/Login.jsx";
 import AuthProvider from "./utils/AuthProvider.jsx";
 
 import Profile from "./features/UserProfile/Profile.jsx";
-axios.defaults.baseURL = `http://localhost:3000`;
+
+axios.defaults.baseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://news-app-backend-b7qabjpqh-manoj-neupanes-projects-f7e33762.vercel.app";
+
 axios.defaults.withCredentials = true;
+
 
 const Navigation = () => (
   <ul className="flex flex-wrap items-center gap-4 text-white font-bold text-sm sm:text-base">
@@ -64,7 +70,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "", element: <Home /> },
-       { path: "world", element: <World /> },
+      { path: "world", element: <World /> },
       { path: "sports", element: <Sports /> },
       { path: "technology", element: <Technology /> },
       { path: "business", element: <Business /> },
@@ -81,7 +87,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-     
+
     ],
   },
   {

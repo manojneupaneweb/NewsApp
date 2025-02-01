@@ -7,11 +7,14 @@ import 'dotenv/config'
 const app = express()
 
 app.use(
-    cors({
-      origin: "http://localhost:5173", // React app URL
-      credentials: true, // Allow credentials (cookies)
-    })
-  );
+  cors({
+    origin: [
+      "http://localhost:5173",
+    ],
+    credentials: true, // Allow credentials (cookies)
+  })
+);
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

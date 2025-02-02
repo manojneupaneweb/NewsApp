@@ -23,44 +23,53 @@ function Home() {
         fetchPosts();
     }, []);
 
-    // Set the state for popup visibility, and set to null when closed
-    const [visible, setVisible] = useState(true);
+    // Check if popup was already closed
+    const [visible, setVisible] = useState(() => {
+        return localStorage.getItem('disclaimerSeen') !== 'true';
+    });
+
+    const handleClose = () => {
+        setVisible(false);
+        localStorage.setItem('disclaimerSeen', 'true'); // Mark as seen
+    };
 
     return (
         <main>
             {visible && (
-                <section className="Disclaimer">
-                    <div
-                        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50"
-                        aria-hidden="true"
-                    >
-                        <div className="bg-white border border-red-400 text-gray-800 px-6 py-6 rounded-lg shadow-lg relative w-11/12 h-60 sm:w-2/3 md:w-1/2 transition-transform duration-300 scale-100 animate-fadeIn">
-                            <h2 className="font-bold text-lg text-center">📢 Disclaimer</h2>
-                            <p className="text-lg mt-2 text-center">
-                                यो समाचार कुनै आधिकारिक स्रोतबाट पुष्टि गरिएको होइन।<br />
-                                यो केवल शैक्षिक उद्देश्यको लागि बनाइएको हो। कृपया आधिकारिक स्रोतबाट जानकारी लिनुहोस्।<br />
-                                यदि कुनै कानूनी समस्या उत्पन्न भएमा जिम्मेवार हुने छैन।
-                            </p>
-                            <p className="mt-3 text-center">
-                                Contact:{" "}
-                                <a
-                                    href="https://manoj-neupane.com.np"
-                                    className="text-blue-700 underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Manoj Neupane
-                                </a>
-                            </p>
-                            <button
-                                onClick={() => setVisible(false)}
-                                className="absolute right-4 bottom-4 font-bold bg-gray-300 py-2 px-5 rounded text-red-700 hover:bg-gray-200 transition"
-                            >
-                                OK
-                            </button>
-                        </div>
-                    </div>
-                </section>
+              <section className="Disclaimer">
+              <div
+                  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50"
+                  aria-hidden="true"
+              >
+                  <div className=" bg-gradient-to-tl from-white via-gray-100 to-gray-200 text-gray-800 px-8 py-8 rounded-lg shadow-xl relative w-11/12 h-80 sm:w-2/3 md:w-1/2 transition-all duration-500 scale-100 animate-fadeIn">
+                      <h2 className="font-extrabold text-2xl text-center text-red-600">📢 Disclaimer</h2>
+                      <p className="text-lg mt-4 text-center font-medium">
+                          This news has not been verified from any official source. <br />
+                          It is created solely for educational purposes. Please refer to official sources for information. <br />
+                          We will not be responsible for any legal issues that may arise.
+                      </p>
+                      <p className="mt-4 mb-6 text-center">
+                          Contact:{" "}
+                          <a
+                              href="https://manoj-neupane.com.np"
+                              className="text-blue-600 hover:text-blue-800 font-semibold underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                          >
+                              Manoj Neupane
+                          </a>
+                      </p>
+                      <button
+                          onClick={handleClose}
+                          className="font-semibold bg-gray-300 py-3 px-8 rounded-xl text-red-800 hover:bg-gray-200 transition-all duration-300"
+                      >
+                          OK, Understand
+                      </button>
+                  </div>
+              </div>
+          </section>
+          
+           
             )}
 
 
@@ -73,17 +82,21 @@ function Home() {
                     onMouseOver={(e) => e.target.stop()}
                     onMouseOut={(e) => e.target.start()}
                 >
-                    नेपालले आफ्नो शिक्षा प्रणालीमा प्रविधि समावेश गर्ने दिशामा महत्त्वपूर्ण कदम चालेको छ।
+                    भारत, उत्तर प्रदेशको प्रयागराजमा लागेको महाकुम्भ मेलामा सहभागी भएर फर्किँदै गरेको गाडी दुर्घटनामा पर्दा ५ जना नेपालीको मृत्यु भएको छ । मृतक ५ जना महोत्तरी जिल्लाको रहेको नेपाल प्रहरीले जनाएको छ ।
+                    कुम्भ मेलाबाट ९ जना नेपाली बोकेर फर्किरहेको भारतीय नम्बर बीआर ३२ पीए ४६६१ नम्बरको स्कर्पियो गाडी बिहारको मुज्जफरपुरमा साइकललाई बचाउने क्रममा अनियन्त्रित भएर सडकमा बजारिँदा ५ जना नेपाली नागरिकको मृत्यु भएको छ ।
                 </marquee>
             </div>
 
             {/* Headline Section */}
-            <section className="py-10 px-5 md:px-20">
+            <section className=" px-5 md:px-20">
                 {posts.slice(0, 2).map((post) => (
-                    <div key={post._id} className="py-10 px-5 md:px-20 text-center">
-                        <h1 className="text-2xl md:text-4xl text-blue-900 font-bold hover:text-blue-700 cursor-pointer">
-                            {post.title}
-                        </h1>
+                    <div key={post._id} className="py-5 px-5 md:px-20 text-center">
+                        <a target='blank' href={`/post/${post._id}`}>
+                            <h1 className="text-2xl md:text-4xl text-blue-900 font-bold hover:text-blue-700 cursor-pointer">
+                                {post.title}
+                            </h1>
+                        </a>
+
                         <div className="flex justify-center items-center mt-5">
                             <img
                                 src={logo} // Use actual author image here

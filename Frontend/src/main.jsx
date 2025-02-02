@@ -36,6 +36,7 @@ import Login from "./features/Auth/Login.jsx";
 import AuthProvider from "./utils/AuthProvider.jsx";
 
 import Profile from "./features/UserProfile/Profile.jsx";
+import PostPage from "./features/Pages/PostPage.jsx";
 
 axios.defaults.baseURL =
   process.env.NODE_ENV === "development"
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
       { path: "science", element: <Science /> },
       { path: "travel", element: <Travel /> },
       { path: "opinion", element: <Opinion /> },
+      { path: "post/:postId", element:  <PostPage />},
       {
         path: "profile",
         element: (

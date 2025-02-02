@@ -40,8 +40,8 @@ function Header() {
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-      const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes
-        }: ${seconds}`;
+      const formattedTime = `${hours}:${minutes < 10 ? "0"+minutes:minutes
+        }:${seconds}`;
 
       setNepaliDateTime({
         date: (
@@ -122,7 +122,7 @@ function Header() {
           <div className="hidden sm:block">
             <p>Advertisement</p>
           </div>
-          <div className="text-sm font-Kantipur">
+          <div className="text-lg text-center font-Kantipur">
           <p> {nepaliDateTime.date}</p>
           <p>{nepaliDateTime.time}</p>
           </div>

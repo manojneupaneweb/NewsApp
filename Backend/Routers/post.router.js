@@ -4,11 +4,13 @@ import {
     deletepost,
     editpost,
     getAllPosts,
+    getPostByCategory,
     getPostById
 } from "../Controllers/post.controller.js";
 import { verifyJwt } from "../Middlewares/auth.middleware.js";
 import { upload } from "../Middlewares/multer.js";
 import { rateLimit } from "express-rate-limit";
+import { verifyAdmin } from "../Middlewares/admin.middleware.js";
 
 const router = Router();
 
@@ -19,27 +21,23 @@ const postLimiter = rateLimit({
     message: "Too many requests, try again later.",
 });
 
-// Route for creating a post (Only for logged-in users)
 router.route("/createpost").post(
-    verifyJwt,
+    verifyAdmin,
     upload.fields([{ name: "image", maxCount: 1 }]),
     createpost
 );
 
-// Route for editing a post (Only for logged-in users)
 router.route("/editpost/:id").put(
-    verifyJwt,
+    verifyAdmin,
     upload.single("image"),
     editpost
 );
 
-// Route to get a single post (Public)
 router.route("/getpostbyid/:id").get(getPostById);
+router.route("/getpostbycategory/:id").get(getPostByCategory);
 
-// Route to delete a post (Only for admin users)
-router.route("/deletepost/:id").delete(verifyJwt, deletepost);
+router.route("/deletepost/:id").delete(verifyAdmin, deletepost);
 
-// Route to get all posts (Public, with rate limiting)
 router.route("/getallposts").get(postLimiter, getAllPosts);
 
 export { router as postRouter };

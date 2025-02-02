@@ -95,6 +95,7 @@ const editpost = async (req, res, next) => {
 
 const getPostById = asyncHandler(async (req, res) => {
     const postId = req.params.id; // Get postId from URL parameters
+    console.log("imcomming post id: ", postId)
 
     // Fetch the post from the database
     const post = await Post.findById(postId);
@@ -139,10 +140,23 @@ const getAllPosts = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch Posts", error: error.message });
     }
 });
+const getPostByCategory = asyncHandler(async (req, res) => {
+  const postId = req.params.id; // Get postId from URL parameters
+  console.log("imcomming post id: ", postId)
+
+  // Fetch the post from the database
+  const post = await Post.findById(postId);
+  if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+  }
+
+  // Return the post data as a response
+  return res.json(post);
+});
 
 
 
 
 export {
-    createpost, editpost, deletepost, getAllPosts, getPostById
+    createpost, editpost, deletepost, getAllPosts, getPostById, getPostByCategory
 }

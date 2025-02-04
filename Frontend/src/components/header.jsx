@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo JPEG.jpg";
-import NepaliDate from "nepali-date-converter";
-import axios from "axios";
 import { toast } from "react-toastify";
+import Advertisement from "./advertisement";
+import { getOneUser, Logout } from "../utils/User.Fetching";
+import { DateAndTime } from "./DateAndTime";
+
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [time, setTime] = useState(new Date().toLocaleTimeString());
   const [profileData, setProfileData] = useState(null);
   const [isUserLogin, setIsUserLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -17,82 +18,34 @@ function Header() {
   const toggleDropdown = () => setIsOpen(!isOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
-  const [nepaliDateTime, setNepaliDateTime] = useState({
-    date: "",
-    time: "",
-  });
-
   useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-      const nepaliDate = new NepaliDate(now);
-      const dayOfWeek = [
-        "आइतबार ",
-        "सोमबार ",
-        "मंगलबार ",
-        "बुधबार",
-        "बिहीबार",
-        "शुक्रबार",
-        "शनिबार ",
-      ];
+    const accessToken = localStorage.getItem("accessToken");    
+    if (!accessToken || accessToken === "undefined") return;
 
-      // Format time in HH:mm format
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
-      const formattedTime = `${hours}:${minutes < 10 ? "0"+minutes:minutes
-        }:${seconds}`;
-
-      setNepaliDateTime({
-        date: (
-          <>
-            {nepaliDate.format("YYYY/MM/DD")}
-            <br />
-            {dayOfWeek[now.getDay()]}
-          </>
-        ),
-        time: formattedTime,
-      });
+    const fetchProfile = async () => {
+      try {
+        const response = await getOneUser();
+        console.log(response.message)
+        if (response?.message) {
+          setProfileData(response.message);
+          setIsAdmin(response.message.role === "admin");
+          setIsUserLogin(true);
+        }
+      } catch (err) {
+        if (err.response?.status !== 401) { // Ignore Unauthorized errors
+          console.error("Error fetching profile:", err);
+          setError("Failed to fetch profile data.");
+        }
+      }
     };
 
-    updateDateTime(); // Initial call to set the time immediately
-    const interval = setInterval(updateDateTime, 1000); // Update every second
-
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await axios.get("/api/v1/users/getUserProfile");
-      setProfileData(response.data.message);
-      setError(null);
-      setIsAdmin(response.data.message.role === "admin");
-      setIsUserLogin(true);
-    } catch (err) {
-      setError(err.response?.status === 401 ? "Session expired. Please log in again." : "Failed to fetch profile data.");
-    }
-  };
-
-  useEffect(() => {
     fetchProfile();
   }, []);
 
-  const Logout = async () => {
-    try {
-      const response = await axios.post("/api/v1/users/logoutUser");
-      if (response.status === 200) {
-        localStorage.clear();
-        toast.success("Logged out successfully.");
-        window.location.href = "/";
-      }
-    } catch {
-      toast.error("Failed to log out. Please try again.");
-    }
-  };
 
   return (
     <>
-      <header >
+      <header>
         {/* Top Bar */}
         <div className="flex flex-wrap bg-red-600 px-4 sm:px-10 justify-between items-center h-7 text-white text-sm">
           <div className="flex items-center gap-4">
@@ -120,40 +73,51 @@ function Header() {
             </Link>
           </div>
           <div className="hidden sm:block">
-            <p>Advertisement</p>
+            <Advertisement />
           </div>
+
           <div className="text-lg text-center font-Kantipur">
-          <p> {nepaliDateTime.date}</p>
-          <p>{nepaliDateTime.time}</p>
+            <DateAndTime />
           </div>
         </div>
       </header>
 
       <nav className="sticky top-0 left-0 bg-blue-500 px-4 py-3 sm:px-10 flex items-center justify-between flex-wrap z-10">
         {/* Mobile Menu Icon */}
-        <button
-          className="text-white text-2xl sm:hidden"
-          onClick={toggleMenu}
-        >
+        <button className="text-white text-2xl sm:hidden" onClick={toggleMenu}>
           <i className={`fa-solid ${menuOpen ? "fa-times" : "fa-bars"}`}></i>
         </button>
 
         {/* Navigation Links */}
         <ul
-          className={`flex flex-col sm:flex-row items-center gap-4 text-white font-bold text-sm sm:text-base ${menuOpen ? "block" : "hidden sm:flex"
-            }`}
+          className={`flex flex-col sm:flex-row items-center gap-4 text-white font-bold text-sm sm:text-base ${
+            menuOpen ? "block" : "hidden sm:flex"
+          }`}
         >
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/world">World</Link></li>
-          <li><Link to="/finance">Finance</Link></li>
-          <li><Link to="/technology">Technology</Link></li>
-          <li><Link to="/business">Business</Link></li>
-          <li><Link to="/entertainment">Entertainment</Link></li>
-          <li><Link to="/sports">Sports</Link></li>
-          <li><Link to="/health">Health</Link></li>
-          <li><Link to="/science">Science</Link></li>
-          <li><Link to="/travel">Travel</Link></li>
-          <li><Link to="/opinion">Opinion</Link></li>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/finance">Finance</Link>
+          </li>
+          <li>
+            <Link to="/technology">Technology</Link>
+          </li>
+          <li>
+            <Link to="/business">Business</Link>
+          </li>
+          <li>
+            <Link to="/entertainment">Entertainment</Link>
+          </li>
+          <li>
+            <Link to="/sports">Sports</Link>
+          </li>
+          <li>
+            <Link to="/health">Health</Link>
+          </li>
+          <li>
+            <Link to="/opinion">Opinion</Link>
+          </li>
         </ul>
 
         {/* Search and Account Dropdown */}
@@ -170,7 +134,7 @@ function Header() {
             >
               {isUserLogin ? (
                 <img
-                  src={profileData?.profilePicture}
+                 src={profileData?.profilePicture}
                   className="w-7 h-8 rounded-full"
                   alt="Profile"
                 />

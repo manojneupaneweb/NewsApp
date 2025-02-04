@@ -118,14 +118,17 @@ function PostNews() {
             required
           >
             <option value="">Choose a category</option>
-            <option value="World">World</option>
+            <option value="Finance">Finance</option>
+            <option value="Business">Business</option>
+            <option value="Health">Health</option>
+            <option value="Entertainment">Entertainment</option>
             <option value="Sports">Sports</option>
             <option value="Technology">Technology</option>
-            {/* Add more categories here */}
+            <option value="Opinion">Opinion</option>
           </select>
         </div>
 
-        <TagInput tags={tags} setTags={setTags} /> {/* Tag Input Component */}
+        <TagInput tags={tags} setTags={setTags} />
 
         <div className="mb-4">
           <label htmlFor="image" className="block text-sm font-medium">

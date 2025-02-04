@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { fetchPostById } from '../../utils/PostFatching'
+import { fetchPostById } from '../../utils/Post.Fatching.js'
+import Advertisement from '../../components/advertisement'
 
 function PostPage() {
   const { postId } = useParams()
@@ -25,6 +26,7 @@ function PostPage() {
         <img src={post.image} alt={post.title} className="w-full h-64 object-cover rounded-lg mb-4 border border-blue-600" />
       )}
       <h1 className="text-3xl font-bold text-gray-800 mb-3">{post.title}</h1>
+      {Advertisement}
       <p className="text-gray-600 mb-4">{post.content}</p>
       
       <div className="flex flex-wrap gap-2 mb-4">

@@ -8,7 +8,7 @@ const app = express()
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN.split(","), // Read origins from .env and convert to array
+    origin: process.env.CORS_ORIGIN.split(","),
     credentials: true,
   })
 );

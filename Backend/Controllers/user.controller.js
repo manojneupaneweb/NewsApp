@@ -100,18 +100,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
-    // Set cookie options
-    const cookieOptions = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Ensure cookies are sent over HTTPS in production
-        sameSite: "lax", // Adjust to your needs
-        maxAge: 24 * 60 * 60 * 1000, // 1 day expiration for the cookies
-    };
-
     return res
         .status(200)
-        .cookie("accessToken", accessToken, cookieOptions)  // Set cookies first
-        .cookie("refreshToken", refreshToken, cookieOptions)
+        .cookie("accessToken", accessToken, Option)  // Set cookies first
+        .cookie("refreshToken", refreshToken, Option)
         .json(
             new ApiResponse(
                 200,

@@ -4,8 +4,9 @@ import {
     deletepost,
     editpost,
     getAllPosts,
-    getPostByCategory,
-    getPostById
+    getPostById,
+    getPostsByCategory,
+    deleteAllPosts
 } from "../Controllers/post.controller.js";
 import { verifyJwt } from "../Middlewares/auth.middleware.js";
 import { upload } from "../Middlewares/multer.js";
@@ -16,8 +17,8 @@ const router = Router();
 
 // Rate Limiting to prevent scraping
 const postLimiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 30, // Max 30 requests per 10 min per IP
+    windowMs: 30 * 60 * 1000,
+    max:100,
     message: "Too many requests, try again later.",
 });
 
@@ -34,10 +35,11 @@ router.route("/editpost/:id").put(
 );
 
 router.route("/getpostbyid/:id").get(getPostById);
-router.route("/getpostbycategory/:id").get(getPostByCategory);
+router.route("/getpostbycategory/:category").get(getPostsByCategory);
 
 router.route("/deletepost/:id").delete(verifyAdmin, deletepost);
 
 router.route("/getallposts").get(postLimiter, getAllPosts);
+// router.route("/deleteAllPosts").get(deleteAllPosts);
 
 export { router as postRouter };

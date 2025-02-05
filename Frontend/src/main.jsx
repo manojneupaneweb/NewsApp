@@ -43,6 +43,7 @@ const baseURL =
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
+console.log("Base URL:", baseURL);
 
 const Navigation = () => (
   <ul className="flex flex-wrap items-center gap-4 text-white font-bold text-sm sm:text-base">

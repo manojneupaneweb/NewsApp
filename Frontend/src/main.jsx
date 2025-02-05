@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import axios from "axios";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 
 // Importing Components
 import App from "./App";
@@ -35,14 +39,22 @@ import PostPage from "./features/Pages/PostPage.jsx";
 import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
 
-// Configure Axios
-const baseURL = import.meta.env.NODE_ENV 
-  ? import.meta.env.REACT_APP_API_PRODUCTION_URL 
-  : import.meta.env.REACT_APP_API_PRODUCTION_URL;
-// const baseURL = import.meta.env.REACT_APP_API_DEVELOPMENT_URL;
+const baseURL =
+  import.meta.env.NODE_ENV === "development"
+    ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
+    : import.meta.env.REACT_APP_API_PRODUCTION_URL;
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
 const Navigation = () => (
   <ul className="flex flex-wrap items-center gap-4 text-white font-bold text-sm sm:text-base">
@@ -112,7 +124,11 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <RouterProvider router={router} />
-  </AuthProvider>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+    <ReactQueryDevtools initialIsOpen={false} />
+  </QueryClientProvider>
 );
+

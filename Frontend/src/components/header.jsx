@@ -19,28 +19,26 @@ function Header() {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   useEffect(() => {
-    // const accessToken = localStorage.getItem("accessToken");
-    // const refreshToken = localStorage.getItem("refreshToken");
-    // if (!accessToken || refreshToken || refreshToken == "undefined" || accessToken === "undefined") return;
-
     const fetchProfile = async () => {
       try {
         const response = await getOneUser();
+  
         if (response?.message) {
           setProfileData(response.message);
           setIsAdmin(response.message.role === "admin");
           setIsUserLogin(true);
         }
       } catch (err) {
-        if (err.response?.status !== 401) { // Ignore Unauthorized errors
+        if (err.response?.status !== 401) {
           console.error("Error fetching profile:", err);
           setError("Failed to fetch profile data.");
         }
       }
     };
-
+  
     fetchProfile();
   }, []);
+  
 
 
   return (

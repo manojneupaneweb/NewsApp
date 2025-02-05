@@ -36,11 +36,13 @@ import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
 
 // Configure Axios
-const baseURL =import.meta.env.REACT_APP_API_PRODUCTION_URL;
+const baseURL = import.meta.env.NODE_ENV 
+  ? import.meta.env.REACT_APP_API_PRODUCTION_URL 
+  : import.meta.env.REACT_APP_API_PRODUCTION_URL;
+// const baseURL = import.meta.env.REACT_APP_API_DEVELOPMENT_URL;
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
-console.log("Base URL:", baseURL);
 
 const Navigation = () => (
   <ul className="flex flex-wrap items-center gap-4 text-white font-bold text-sm sm:text-base">

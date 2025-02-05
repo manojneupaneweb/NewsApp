@@ -19,13 +19,13 @@ function Header() {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");    
-    if (!accessToken || accessToken === "undefined") return;
+    // const accessToken = localStorage.getItem("accessToken");
+    // const refreshToken = localStorage.getItem("refreshToken");
+    // if (!accessToken || refreshToken || refreshToken == "undefined" || accessToken === "undefined") return;
 
     const fetchProfile = async () => {
       try {
         const response = await getOneUser();
-        console.log(response.message)
         if (response?.message) {
           setProfileData(response.message);
           setIsAdmin(response.message.role === "admin");
@@ -90,9 +90,8 @@ function Header() {
 
         {/* Navigation Links */}
         <ul
-          className={`flex flex-col sm:flex-row items-center gap-4 text-white font-bold text-sm sm:text-base ${
-            menuOpen ? "block" : "hidden sm:flex"
-          }`}
+          className={`flex flex-col sm:flex-row items-center gap-4 text-white font-bold text-sm sm:text-base ${menuOpen ? "block" : "hidden sm:flex"
+            }`}
         >
           <li>
             <Link to="/">Home</Link>
@@ -134,7 +133,7 @@ function Header() {
             >
               {isUserLogin ? (
                 <img
-                 src={profileData?.profilePicture}
+                  src={profileData?.profilePicture}
                   className="w-7 h-8 rounded-full"
                   alt="Profile"
                 />

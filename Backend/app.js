@@ -12,7 +12,6 @@ app.use(
     credentials: true,
   })
 );
-console.log("Allowed Origins:", process.env.CORS_ORIGIN);
 
 
 

@@ -3,6 +3,10 @@ import { toast } from "react-toastify";
 
 export const getOneUser = async () => {
     try {
+        // const accessToken = localStorage.getItem("accessToken");
+        // const refreshToken = localStorage.getItem("refreshToken");
+        // if (!accessToken || refreshToken || refreshToken == "undefined" || accessToken === "undefined") return;
+
         const response = await axios.get("/api/v1/users/getUserProfile");
         return response.data;
     } catch (err) {

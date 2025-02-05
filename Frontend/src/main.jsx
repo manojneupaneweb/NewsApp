@@ -30,16 +30,13 @@ import { AuthProvider, ProtectedRoute } from "./utils/AuthProvide.jsx";
 import Signup from "./features/Auth/Signup.jsx";
 import Login from "./features/Auth/Login.jsx";
 
-import Profile from "./features/UserProfile/Profile.jsx";
+import Profile from './features/UserProfile/Profile.jsx'
 import PostPage from "./features/Pages/PostPage.jsx";
 import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
 
 // Configure Axios
-const baseURL =
-  process.env.NODE_ENV === "development"
-    ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
-    : import.meta.env.REACT_APP_API_PRODUCTION_URL;
+const baseURL =import.meta.env.REACT_APP_API_PRODUCTION_URL;
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;

@@ -9,4 +9,7 @@ export default defineConfig({
     react(),
     envcompatible(),
   ],
+  server: {
+    historyApiFallback: true,
+  },
 })

@@ -23,7 +23,7 @@ const postLimiter = rateLimit({
 });
 
 router.route("/createpost").post(
-    verifyAdmin,
+    verifyJwt,
     upload.fields([{ name: "image", maxCount: 1 }]),
     createpost
 );

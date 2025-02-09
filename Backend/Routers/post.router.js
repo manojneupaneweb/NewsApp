@@ -15,7 +15,6 @@ import { verifyAdmin } from "../Middlewares/admin.middleware.js";
 
 const router = Router();
 
-// Rate Limiting to prevent scraping
 const postLimiter = rateLimit({
     windowMs: 30 * 60 * 1000,
     max:100,
@@ -23,13 +22,13 @@ const postLimiter = rateLimit({
 });
 
 router.route("/createpost").post(
-    verifyAdmin,
+    verifyJwt,
     upload.fields([{ name: "image", maxCount: 1 }]),
     createpost
 );
 
 router.route("/editpost/:id").put(
-    verifyAdmin,
+    verifyJwt,
     upload.single("image"),
     editpost
 );
@@ -37,7 +36,7 @@ router.route("/editpost/:id").put(
 router.route("/getpostbyid/:id").get(getPostById);
 router.route("/getpostbycategory/:category").get(getPostsByCategory);
 
-router.route("/deletepost/:id").delete(verifyAdmin, deletepost);
+router.route("/deletepost/:id").delete(verifyJwt, deletepost);
 
 router.route("/getallposts").get(postLimiter, getAllPosts);
 // router.route("/deleteAllPosts").get(deleteAllPosts);

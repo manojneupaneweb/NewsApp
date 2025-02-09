@@ -41,13 +41,13 @@ const AuthProvider = ({ children }) => {
 
 const ProtectedRoute = ({ children, admin = false }) => {
     const { role, loading } = useContext(AuthContext);
-    console.log("Current role:", role);
-    console.log("Loading state:", loading);
+    // console.log("Current role:", role);
+    // console.log("Loading state:", loading);
 
     if (loading) return null;
 
     if (admin && role !== "admin") return <Navigate to="/" replace />;
-    if (!admin && !role) return <Navigate to="/login" replace />;
+    if (!admin && !role) return <Navigate to="/auth/login" replace />;
 
     return children;
 };

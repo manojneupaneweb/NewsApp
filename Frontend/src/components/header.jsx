@@ -168,13 +168,13 @@ function Header() {
                 ) : (
                   <>
                     <Link
-                      to="/signup"
+                      to="/auth/signup"
                       className="block px-4 py-2 text-sm text-gray-700 font-bold hover:bg-gray-100"
                     >
                       Signup
                     </Link>
                     <Link
-                      to="/login"
+                      to="/auth/login"
                       className="block px-4 py-2 text-sm text-gray-700 font-bold hover:bg-gray-100"
                     >
                       Login

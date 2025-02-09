@@ -32,3 +32,4 @@ export const fetchPostsByCategory = async (category) => {
         throw error;
     }
 };
+

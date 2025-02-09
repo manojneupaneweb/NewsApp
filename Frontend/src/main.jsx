@@ -40,7 +40,7 @@ import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
 
 const baseURL =
-  import.meta.env.NODE_ENV === "development"
+  import.meta.env.REACT_APP_API_NODE_ENV === "development"
     ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
     : import.meta.env.REACT_APP_API_PRODUCTION_URL;
 
@@ -99,7 +99,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/",
+    path: "/auth",
     children: [
       { path: "signup", element: <Signup /> },
       { path: "login", element: <Login /> },

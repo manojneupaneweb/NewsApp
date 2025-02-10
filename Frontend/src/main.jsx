@@ -38,11 +38,11 @@ import PostPage from "./features/Pages/PostPage.jsx";
 import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
 
-const baseURL =
-  import.meta.env.REACT_APP_API_NODE_ENV === "development"
-    ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
-    : import.meta.env.REACT_APP_API_PRODUCTION_URL;
-// const baseURL =import.meta.env.REACT_APP_API_DEVELOPMENT_URL
+// const baseURL =
+//   import.meta.env.REACT_APP_API_NODE_ENV === "development"
+//     ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
+//     : import.meta.env.REACT_APP_API_PRODUCTION_URL;
+const baseURL =import.meta.env.REACT_APP_API_PRODUCTION_URL
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;

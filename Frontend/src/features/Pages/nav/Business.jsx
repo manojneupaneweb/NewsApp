@@ -52,7 +52,7 @@ const Business = () => {
                   className="h-48 w-full rounded-lg object-cover brightness-75"
                 />
                 <span className="absolute top-2 right-2 bg-blue-500 text-black text-xs px-3 py-1 rounded-full">
-                  Technology
+                Business
                 </span>
               </div>
               <h2 className="text-blue-500 font-semibold text-xl mt-4 hover:text-blue-400 cursor-pointer">

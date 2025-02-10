@@ -414,11 +414,6 @@ function Home() {
             <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
                 <Advertisement />
             </div>
-
-
-            <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                <Advertisement />
-            </div>
             {/* Technology Section  */}
             <section className="py-10 px-5 md:px-20 bg-gray-900 text-white">
                 <h1 className="text-green-400 font-bold text-3xl mb-6 flex items-center gap-3">

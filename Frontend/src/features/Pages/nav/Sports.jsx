@@ -9,18 +9,18 @@ const Sports = () => {
   const postsPerPage = 6; // Number of posts per page
 
   useEffect(() => {
-    const getSportsNews = async () => {
-      try {
-        const data = await fetchPostsByCategory("sports", currentPage, postsPerPage);
-        setPosts(data.posts); // Assuming data contains 'posts' array
-        setTotalPosts(data.totalPosts); // Assuming data contains 'totalPosts'
-      } catch (error) {
-        console.error("Failed to fetch sports news", error);
-      }
-    };
-
-    getSportsNews();
-  }, [currentPage]);
+      const getTechnologyNews = async () => {
+        try {
+          const data = await fetchPostsByCategory("sports", currentPage, postsPerPage);
+          setPosts(data); 
+          setTotalPosts(data.length); 
+        } catch (error) {
+          console.error("Failed to fetch Sports news", error);
+        }
+      };
+  
+      getTechnologyNews();
+    }, [currentPage]);
 
   // Pagination calculation
   const totalPages = Math.ceil(totalPosts / postsPerPage);

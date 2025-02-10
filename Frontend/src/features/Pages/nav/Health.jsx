@@ -8,20 +8,19 @@ const Health = () => {
   const [totalPosts, setTotalPosts] = useState(0);
   const postsPerPage = 6;
 
-  useEffect(() => {
-    const getHealthNews = async () => {
-      try {
-        const data = await fetchPostsByCategory("health", currentPage, postsPerPage);
-        setPosts(data.posts);
-        setTotalPosts(data.totalPosts);
-      } catch (error) {
-        console.error("Failed to fetch health news", error);
-      }
-    };
-
-    getHealthNews();
-  }, [currentPage]);
-
+useEffect(() => {
+      const getTechnologyNews = async () => {
+        try {
+          const data = await fetchPostsByCategory("health", currentPage, postsPerPage);
+          setPosts(data); 
+          setTotalPosts(data.length); 
+        } catch (error) {
+          console.error("Failed to fetch Health news", error);
+        }
+      };
+  
+      getTechnologyNews();
+    }, [currentPage]);
   // Pagination calculation
   const totalPages = Math.ceil(totalPosts / postsPerPage);
 

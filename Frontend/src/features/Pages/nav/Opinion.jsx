@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { fetchPostsByCategory } from "../../../utils/Post.Fatching";
+import moment from "moment";
 const Opinion = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(0);
   const postsPerPage = 10;
 
-  useEffect(() => {
-    const getOpinionNews = async () => {
-      try {
-        const data = await fetchPostsByCategory("opinion", currentPage, postsPerPage);
-        setPosts(data.posts); // Assuming data contains 'posts' array
-        setTotalPosts(data.totalPosts); // Assuming data contains 'totalPosts'
-      } catch (error) {
-        console.error("Failed to fetch opinion news", error);
-      }
-    };
-
-    getOpinionNews();
-  }, [currentPage]);
+ useEffect(() => {
+       const getTechnologyNews = async () => {
+         try {
+           const data = await fetchPostsByCategory("opinion", currentPage, postsPerPage);
+           setPosts(data); 
+           setTotalPosts(data.length); 
+         } catch (error) {
+           console.error("Failed to fetch Opinion news", error);
+         }
+       };
+   
+       getTechnologyNews();
+     }, [currentPage]);
 
   // Calculate total pages
   const totalPages = Math.ceil(totalPosts / postsPerPage);

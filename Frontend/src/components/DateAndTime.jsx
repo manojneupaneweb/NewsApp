@@ -27,7 +27,8 @@ export function DateAndTime() {
             const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds}`;
 
             setNepaliDateTime({
-                date: `${nepaliDate.format("YYYY/MM/DD")} ${dayOfWeek[now.getDay()]}`,
+                date: `${nepaliDate.format("YYYY/MM/DD")}`,
+                week: `${dayOfWeek[now.getDay()]}`,
                 time: formattedTime,
             });
         };
@@ -35,12 +36,13 @@ export function DateAndTime() {
         updateDateTime(); // Initial call
         const interval = setInterval(updateDateTime, 1000);
 
-        return () => clearInterval(interval); // Cleanup
+        return () => clearInterval(interval);
     }, []);
 
     return (
-        <div>
+        <div className="font-semibold">
             <p>{nepaliDateTime.date}</p>
+            <p>{nepaliDateTime.week}</p>
             <p>{nepaliDateTime.time}</p>
         </div>
     );

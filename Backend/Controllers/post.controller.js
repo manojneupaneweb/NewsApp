@@ -152,9 +152,6 @@ const getAllPosts = asyncHandler(async (req, res) => {
 });
 const getPostsByCategory = asyncHandler(async (req, res) => {
   const category = req.params.category;
-  console.log(req.params.category);
-  
-  console.log("Incoming category: ", category);
   const posts = await Post.find({ category: { $regex: category, $options: "i" } })
     .sort({ createdAt: -1 });
 

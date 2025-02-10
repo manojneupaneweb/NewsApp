@@ -67,7 +67,7 @@ function PostNews() {
     }
 
     try {
-      const response = await axios.post('https://news-app-backend-ruby.vercel.app/api/v1/posts/createpost', data, {
+      const response = await axios.post('/api/v1/posts/createpost', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

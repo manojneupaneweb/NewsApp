@@ -125,8 +125,13 @@ function Home() {
                             className="rounded-lg bg-slate-100 w-full h-72 md:h-96 object-cover cursor-pointer"
                         />
                         <div className='text-center my-10'>
-                            <p>{post.content}</p>
+                            <p>
+                                {post.content.split(" ").length > 30
+                                    ? post.content.split(" ").slice(0, 30).join(" ") + "..."
+                                    : post.content}
+                            </p>
                         </div>
+
                     </div>
                 ))}
             </section>
@@ -174,7 +179,6 @@ function Home() {
                     ))}
                 </div>
             </section>
-
 
             {/* add section */}
             <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
@@ -235,10 +239,10 @@ function Home() {
             </div>
             {/* Health Section */}
             <section className="py-10 px-5 md:px-20 bg-gray-100 border-b  border-gray-300 pb-10">
-                <h1 className="text-green-700 font-bold text-3xl mb-6"> समाचार</h1>
+                <h1 className="text-green-700 font-bold text-3xl mb-6"> स्वास्थ्य</h1>
 
                 {posts.filter((post) => post.category?.toLowerCase() === "health").length === 0 ? (
-                    <p className="text-center text-gray-500 text-lg mt-10">हाल स्वास्थ्यखेलकुद सम्बन्धी कुनै समाचार उपलब्ध छैन।</p>
+                    <p className="text-center text-gray-500 text-lg mt-10">हाल स्वास्थ्य सम्बन्धी कुनै समाचार उपलब्ध छैन।</p>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
                         {posts

@@ -34,6 +34,15 @@ function Home() {
     };
 
     return (
+         <>
+        {loading ? (
+            <>
+            <div className='min-w-screen min-h-screen bg-slate-200 flex items-center justify-center'>
+
+            </div>
+            <h1 className='text-2xl text-black'>Loading....</h1>
+            </>
+        ):(
         <main>
             {visible && (
                 <section className="Disclaimer">
@@ -519,6 +528,8 @@ function Home() {
 
 
         </main >
+    )}
+    </>
     )
 };
 export default Home;

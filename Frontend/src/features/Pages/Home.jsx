@@ -36,11 +36,10 @@ function Home() {
     return (
          <>
         {loading ? (
-            <>
-            <div className='min-w-screen min-h-screen bg-slate-200 flex items-center justify-center'>
-
+           <>
+            <div className='w-screen h-60 bg-slate-200 flex items-center justify-center'>
+            <h1 className='text-2xl h-1/2 text-black'>Loading....</h1>
             </div>
-            <h1 className='text-2xl text-black'>Loading....</h1>
             </>
         ):(
         <main>

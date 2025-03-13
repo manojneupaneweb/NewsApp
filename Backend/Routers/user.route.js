@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../Middlewares/multer.js"
-import { loginUser, otpverification, registerUser, logutUser, getUserProfile, refreshAccessToken, getAllUsers } from "../Controllers/user.controller.js";
+import { loginUser, otpverification, registerUser, logutUser, getUserProfile, refreshAccessToken, getAllUsers, getUserById } from "../Controllers/user.controller.js";
 import { verifyJwt } from "../Middlewares/auth.middleware.js";
 
 
@@ -15,7 +15,9 @@ userRoute.route("/loginUser").post(loginUser);
 userRoute.route("/refreshtoken").get(verifyJwt, refreshAccessToken);
 userRoute.route("/getUserProfile").get(verifyJwt, getUserProfile);
 userRoute.route("/logoutUser").post(verifyJwt, logutUser);
-userRoute.get("/allUsers", verifyJwt, getAllUsers);
+userRoute.route("/allUsers").get(verifyJwt, getAllUsers);
+userRoute.route("/getuserbyid/:userid").get(verifyJwt, getUserById);
+
 
 
 export { userRoute };

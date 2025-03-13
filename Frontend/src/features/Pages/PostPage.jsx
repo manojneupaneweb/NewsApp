@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchPostById } from "../../utils/Post.Fatching.js";
 import Advertisement from "../../components/advertisement";
+import { getUserById } from "../../utils/User.Fetching.js";
 
 function PostPage() {
   const { postId } = useParams();
   const [post, setPost] = useState({});
+  const [author, setAuthor] = useState(null); // State for author info
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -20,8 +22,23 @@ function PostPage() {
     fetchPost();
   }, [postId]);
 
+  useEffect(() => {
+    if (post.userId) {
+      const fetchUser = async () => {
+        try {
+          const data = await getUserById(post.userId);
+          setAuthor(data);
+        } catch (error) {
+          console.error("Error fetching author:", error);
+        }
+      };
+
+      fetchUser();
+    }
+  }, [post.userId]);
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10 border border-gray-200">
       {/* Post Image */}
       {post.image && (
         <div className="mb-6">
@@ -34,7 +51,7 @@ function PostPage() {
       )}
 
       {/* Title */}
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-4 leading-tight">
+      <h1 className="text-3xl font-extrabold text-gray-900 mb-4 leading-tight border-b-2 pb-2">
         {post.title}
       </h1>
 
@@ -42,9 +59,14 @@ function PostPage() {
       <div className="mb-4">{Advertisement}</div>
 
       {/* Content */}
-      <p className="text-gray-700 leading-relaxed mb-6 text-lg">
-        {post.content}
-      </p>
+      <div className="text-gray-700 leading-relaxed mb-6 text-lg space-y-4">
+        {post.content &&
+          post.content.split("\n").map((paragraph, index) => (
+            <p key={index} className="relative pl-6">
+              <span className="absolute left-0 top-1 text-blue-600 font-extrabold">|</span> {paragraph}
+            </p>
+          ))}
+      </div>
 
       {/* Tags & Category */}
       <div className="flex flex-wrap gap-2 mb-6">
@@ -60,11 +82,23 @@ function PostPage() {
         )}
       </div>
 
+      {/* Opinion Section */}
+      {post.opinion && post.opinion.length > 0 && (
+        <div className="border-t pt-4 mt-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">🔹 Opinion</h2>
+          <ul className="list-disc pl-5 text-gray-600 space-y-1">
+            {post.opinion.map((op, index) => (
+              <li key={index}>{op}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Author Info */}
-      {post.author && (
-        <p className="text-gray-500 text-sm italic border-t pt-4">
-          <strong>By:</strong> {post.author}
-        </p>
+      {author && (
+        <div className="mt-6 border-t pt-4 text-gray-500 text-sm italic">
+          <strong>By:</strong> {author.name} | 🆔 {author.id}
+        </div>
       )}
     </div>
   );

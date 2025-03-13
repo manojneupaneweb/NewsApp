@@ -43,7 +43,7 @@ import Finance from "./features/Pages/nav/Finance.jsx";
 //     ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
 //     : import.meta.env.REACT_APP_API_PRODUCTION_URL;
 // <<<<<<< HEAD
-const baseURL =import.meta.env.REACT_APP_API_PRODUCTION_URL
+const baseURL = import.meta.env.REACT_APP_API_DEVELOPMENT_URL
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;

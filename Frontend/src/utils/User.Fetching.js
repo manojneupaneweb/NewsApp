@@ -6,7 +6,7 @@ export const getOneUser = async () => {
         const accessToken = localStorage.getItem("accessToken");
         if (!accessToken || accessToken === "undefined") return null;
 
-        const response = await axios.get("/api/v1/users/getUserProfile");
+        const response = await axios.get(`/api/v1/users/getUserProfile`);
         // console.log("Fetched User Data:", response.data);
         return response.data;
     } catch (err) {
@@ -14,8 +14,21 @@ export const getOneUser = async () => {
         return null;
     }
 };
+export const getUserById = async (userid) => {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken || accessToken === "undefined") return null;
+        console.log("userid", userid);
 
-  
+        const response = await axios.get(`/api/v1/users/getuserbyid/${userid}`);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching profile:", err.response?.data || err);
+        return null;
+    }
+};
+
+
 
 export const getAllUser = async () => {
     try {

@@ -41,7 +41,7 @@ import Finance from "./features/Pages/nav/Finance.jsx";
 const baseURL =
   import.meta.env.REACT_APP_API_NODE_ENV === "development"
     ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
-    : import.meta.env.REACT_APP_API_PRODUCTION_URL;
+    : `https://news-app-backend-ruby.vercel.app`;
 
 // const baseURL = import.meta.env.REACT_APP_API_DEVELOPMENT_URL
 

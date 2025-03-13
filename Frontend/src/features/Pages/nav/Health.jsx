@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchPostsByCategory } from "../../../utils/Post.Fatching"; // Adjust this import based on your project structure
 import moment from "moment"; // Ensure moment.js is installed
+import Loading from "../../../components/Loading";
 
 const Health = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(0);
   const postsPerPage = 6;
+  const [loading, setLoading] = useState(true);
 
 useEffect(() => {
       const getTechnologyNews = async () => {
@@ -14,6 +16,7 @@ useEffect(() => {
           const data = await fetchPostsByCategory("health", currentPage, postsPerPage);
           setPosts(data); 
           setTotalPosts(data.length); 
+          setLoading(false);
         } catch (error) {
           console.error("Failed to fetch Health news", error);
         }
@@ -32,6 +35,12 @@ useEffect(() => {
   };
 
   return (
+    <>    {
+      loading ? (
+        <div className='flex items-center justify-center h-[80vh]'>
+          <Loading />
+        </div>
+      ) : (
     <section className="py-10 px-5 md:px-20 bg-gray-100">
       <h1 className="text-green-600 font-bold text-3xl mb-6 flex items-center gap-3">
         <i className="fas fa-heartbeat"></i> स्वास्थ्य समाचार
@@ -73,7 +82,7 @@ useEffect(() => {
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 10 && (
         <div className="flex justify-center mt-8 gap-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
@@ -95,6 +104,8 @@ useEffect(() => {
         </div>
       )}
     </section>
+      )}
+    </>
   );
 };
 

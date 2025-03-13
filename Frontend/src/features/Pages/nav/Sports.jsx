@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchPostsByCategory } from "../../../utils/Post.Fatching"; // Adjust this import based on your project structure
 import moment from "moment"; // Make sure moment.js is imported
+import Loading from "../../../components/Loading";
 
 const Sports = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(0);
   const postsPerPage = 6; // Number of posts per page
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
       const getTechnologyNews = async () => {
@@ -14,6 +16,7 @@ const Sports = () => {
           const data = await fetchPostsByCategory("sports", currentPage, postsPerPage);
           setPosts(data); 
           setTotalPosts(data.length); 
+          setLoading(false);
         } catch (error) {
           console.error("Failed to fetch Sports news", error);
         }
@@ -33,6 +36,12 @@ const Sports = () => {
   };
 
   return (
+    <>    {
+      loading ? (
+        <div className='flex items-center justify-center h-[80vh]'>
+          <Loading />
+        </div>
+      ) : (
     <section className="py-10 px-5 md:px-20 bg-gray-100">
       <h1 className="text-green-600 font-bold text-3xl mb-6 flex items-center gap-3">
         <i className="fas fa-futbol"></i> खेल समाचार
@@ -96,6 +105,8 @@ const Sports = () => {
         </div>
       )}
     </section>
+      )}
+    </>
   );
 };
 

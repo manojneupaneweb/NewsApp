@@ -112,7 +112,7 @@ function Login() {
 
           {/* Signup Link */}
           <p className="text-center">
-            Don't have an account? <Link to="/signup" className="text-blue-600">Sign up</Link>
+            Don't have an account? <Link to="/auth/signup" className="text-blue-600">Sign up</Link>
           </p>
         </form>
       </div>

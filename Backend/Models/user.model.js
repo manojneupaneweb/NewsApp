@@ -26,7 +26,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["user", "admin", "mainadmin"],
+        enum: ["user", "admin",],
         default: "user"
     },
     isOtpVerified: {
@@ -50,7 +50,6 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 }
 
 userSchema.methods.generateAccessToken = function () {
-
     return jwt.sign(
         {
             _id: this._id,

@@ -1,32 +1,25 @@
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Node modules  
+node_modules/  
+npm-debug.log*  
+yarn.lock  
+package-lock.json  
 
-# Dependencies
-node_modules/
-dist/
-dist-ssr/
-jspm_packages/
+# Environment variables  
+.env  
+.env.local  
+.env.*.local  
 
-# Build artifacts
-*.tgz
-*.local
+# Build output  
+dist/  
 
-# Editor files
-.vscode/
-.idea/
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Vite cache  
+.vite/  
 
-# OS-specific files
-Thumbs.db
-.env
+# Editor/IDE files  
+.vscode/  
+.idea/  
+*.swp  
+
+# OS-specific files  
+.DS_Store  
+Thumbs.db  

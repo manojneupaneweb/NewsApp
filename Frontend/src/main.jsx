@@ -43,7 +43,7 @@ const baseURL =
     ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
     : `https://news-app-backend-ruby.vercel.app`;
 
-// const baseURL = import.meta.env.REACT_APP_API_DEVELOPMENT_URL
+// const baseURL = import.meta.env.REACT_APP_API_PRODUCTION_URL
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;

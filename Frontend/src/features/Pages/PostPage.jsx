@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchPostById } from "../../utils/Post.Fatching.js";
 import Advertisement from "../../components/advertisement";
 import { getUserById } from "../../utils/User.Fetching.js";
+import moment from "moment";
 
 function PostPage() {
   const { postId } = useParams();
@@ -13,6 +14,9 @@ function PostPage() {
     const fetchPost = async () => {
       try {
         const data = await fetchPostById(postId);
+        console.log("Fetched post data:", data);
+        console.log(data.author.name);
+
         setPost(data);
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -27,6 +31,8 @@ function PostPage() {
       const fetchUser = async () => {
         try {
           const data = await getUserById(post.userId);
+          console.log("Fetched author data:", data);
+
           setAuthor(data);
         } catch (error) {
           console.error("Error fetching author:", error);
@@ -39,6 +45,29 @@ function PostPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10 border border-gray-200">
+      <div className="flex justify-between">
+        <div className=" mb-4 text-gray-600 flex">
+          {/* Author Info */}
+          <img
+            src={post?.author?.profilePicture || '/default-avatar.png'}
+            alt="Author Profile"
+            className="inline-block w-14 h-14 rounded-full mr-2 border border-blue-600 shadow-sm hover:shadow-md transition-shadow duration-300"
+          />
+          <div>
+            <p className="text-gray-500 ml-2">
+              {post && post.author ? post.author.name : "Unknown"}
+            </p>
+            <p className="text-gray-500 ml-2">
+              {post && post.author ? `(${post.author.role})` : ""}
+            </p>
+          </div>
+        </div>
+        <div>
+          <p className="ml-3 text-gray-600">
+            <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
+          </p>
+        </div>
+      </div>
       {/* Post Image */}
       {post.image && (
         <div className="mb-6">
@@ -94,12 +123,7 @@ function PostPage() {
         </div>
       )}
 
-      {/* Author Info */}
-      {author && (
-        <div className="mt-6 border-t pt-4 text-gray-500 text-sm italic">
-          <strong>By:</strong> {author.name} | 🆔 {author.id}
-        </div>
-      )}
+
     </div>
   );
 }

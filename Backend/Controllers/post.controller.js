@@ -1,4 +1,5 @@
 import { Post } from "../Models/post.model.js"
+import { User } from "../Models/user.model.js"
 import { asyncHandler } from "../Utils/asyncHandler.util.js"
 import { ApiError } from "../Utils/apiError.util.js"
 import { ApiResponse } from "../Utils/apiResponse.util.js"
@@ -94,18 +95,20 @@ const editpost = async (req, res, next) => {
 };
 
 const getPostById = asyncHandler(async (req, res) => {
-  const postId = req.params.id; // Get postId from URL parameters
-  console.log("imcomming post id: ", postId)
+  const postId = req.params.id;  
+  
+  const post = await Post.findById(postId)
+  .populate('author', '-password -refreshToken -isOtpVerified -phone _id -createdAt -email -updatedAt')
 
-  // Fetch the post from the database
-  const post = await Post.findById(postId);
-  if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
-  }
 
-  // Return the post data as a response
-  return res.json(post);
+if (!post) {
+  return res.status(404).json({ message: 'Post not found' });
+}
+
+return res.json(post);
+
 });
+
 
 const deletepost = asyncHandler(async (req, res) => {
   const postId = req.params.id;
@@ -135,7 +138,7 @@ const deletepost = asyncHandler(async (req, res) => {
 const deleteAllPosts = asyncHandler(async (req, res) => {
   try {
     // Using deleteMany to remove all posts
-    await Post.deleteMany(); 
+    await Post.deleteMany();
     res.status(200).json({ success: true, message: 'All posts have been deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to delete posts", error: error.message });

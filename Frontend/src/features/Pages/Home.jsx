@@ -34,6 +34,9 @@ function Home() {
         localStorage.setItem('disclaimerSeen', 'true');
     };
 
+
+
+
     return (
         <>
             {loading ? (
@@ -79,7 +82,7 @@ function Home() {
 
 
                     )}
-
+                    
                     {/* Marquee Section */}
                     <div>
                         <marquee

@@ -7,7 +7,6 @@ export const getOneUser = async () => {
         if (!accessToken || accessToken === "undefined") return null;
 
         const response = await axios.get(`/api/v1/users/getUserProfile`);
-        // console.log("Fetched User Data:", response.data);
         return response.data;
     } catch (err) {
         console.error("Error fetching profile:", err.response?.data || err);

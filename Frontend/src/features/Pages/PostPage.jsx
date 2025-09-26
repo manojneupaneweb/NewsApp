@@ -17,6 +17,8 @@ function PostPage() {
     const fetchPost = async () => {
       try {
         const data = await fetchPostById(postId);
+        console.log("Fetched Post Data:", data);
+        
         setPost(data);
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -26,20 +28,6 @@ function PostPage() {
     fetchPost();
   }, [postId]);
 
-  useEffect(() => {
-    if (post.userId) {
-      const fetchUser = async () => {
-        try {
-          const data = await getUserById(post.userId);
-          setAuthor(data);
-        } catch (error) {
-          console.error("Error fetching author:", error);
-        }
-      };
-
-      fetchUser();
-    }
-  }, [post.userId]);
 
   const handleLike = () => {
     setIsLiked(!isLiked);

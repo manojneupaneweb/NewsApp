@@ -24,7 +24,9 @@ export const verifyJwt = asyncHandler(async (req, _, next) => {
 
     if (!user) {
         console.error("❌ No User Found for This Token");
+        localStorage.removeItem("accessToken");
         throw new ApiError(401, "Invalid Access Token");
+
     }
 
     req.user = user;

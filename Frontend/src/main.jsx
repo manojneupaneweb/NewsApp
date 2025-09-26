@@ -43,7 +43,7 @@ const baseURL =
     ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
     : import.meta.env.REACT_APP_API_PRODUCTION_URL;
 
-axios.defaults.baseURL = https://news-app-backend-ruby.vercel.app/;
+axios.defaults.baseURL = 'https://news-app-backend-ruby.vercel.app/';
 axios.defaults.withCredentials = true;
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");

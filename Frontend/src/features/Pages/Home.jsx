@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import logo from "../../assets/images/logo JPEG.jpg";
 import moment from "moment";
 import Advertisement from '../../components/advertisement';
 import { fetchAllPosts } from '../../utils/Post.Fatching';
 import Newsletter from '../../components/Newsletter.jsx';
 import Loading from '../../components/Loading.jsx';
+import PropTypes from 'prop-types';
 
 function Home() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeCategory, setActiveCategory] = useState('all');
 
     // Fetch posts from API
     useEffect(() => {
@@ -34,503 +37,369 @@ function Home() {
         localStorage.setItem('disclaimerSeen', 'true');
     };
 
+    // Category filtering
+    const categories = [
+        { id: 'all', name: 'सबै समाचार', icon: 'fa-newspaper', color: 'blue' },
+        { id: 'health', name: 'स्वास्थ्य', icon: 'fa-heart-pulse', color: 'green' },
+        { id: 'business', name: 'व्यापार', icon: 'fa-chart-line', color: 'purple' },
+        { id: 'sports', name: 'खेलकुद', icon: 'fa-trophy', color: 'red' },
+        { id: 'technology', name: 'प्रविधि', icon: 'fa-microchip', color: 'indigo' },
+        { id: 'finance', name: 'वित्त', icon: 'fa-money-bill-wave', color: 'emerald' }
+    ];
 
+    const filteredPosts = activeCategory === 'all'
+        ? posts
+        : posts.filter(post => post.category?.toLowerCase() === activeCategory);
 
-
-    return (
-        <>
-            {loading ? (
-                <div className='flex items-center justify-center h-[80vh]'>
-                    <Loading />
+    const BreakingNews = () => (
+        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-2 px-4">
+            <div className="max-w-7xl mx-auto flex items-center">
+                <span className="bg-white text-red-600 px-3 py-1 rounded-full text-sm font-bold mr-4 flex items-center gap-2">
+                    <i className="fa-solid fa-bolt"></i> ब्रेकिङ न्यूज
+                </span>
+                <div className="overflow-hidden flex-1">
+                    <div className="animate-marquee whitespace-nowrap font-bold">
+                        नेपालमा पछिल्लो समय भ्रष्टाचारविरुद्धको आन्दोलनले ठूलो चर्चा पाएको छ। जेन-जेड पुस्ताले सरकारको विरोध गर्दै व्यापक प्रदर्शन गरेका छन्, जसका कारण प्रधानमन्त्री केपी शर्मा ओलीले राजीनामा दिएका छन्। यस आन्दोलनको परिणामस्वरूप, सुशिला कार्कीलाई अस्थायी प्रधानमन्त्रीको रूपमा नियुक्त गरिएको छ। साथै, नेपाल र वेस्ट इन्डिज बीचको ऐतिहासिक टी-२० क्रिकेट सिरिजको पहिलो खेल आज हुँदैछ। यसका साथै, काठमाडौंको बिजेश्वरीस्थित एक फर्निचर उद्योगमा आगलागी भएको छ, जसमा ठूलो धनमालको क्षति भएको छ। यी घटनाहरूले नेपाली समाजमा ठूलो प्रभाव पारेका छन्।
+                    </div>
                 </div>
-            ) : (
-                <main>
-                    {visible && (
-                        <section className="Disclaimer">
-                            <div
-                                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50"
-                                aria-hidden="true"
-                            >
-                                <div className=" bg-gradient-to-tl from-white via-gray-100 to-gray-200 text-gray-800 px-8 py-8 rounded-lg shadow-xl relative w-11/12 h-80 sm:w-2/3 md:w-1/2 transition-all duration-500 scale-100 animate-fadeIn">
-                                    <h2 className="font-extrabold text-2xl text-center text-red-600">📢 Disclaimer</h2>
-                                    <p className="text-lg mt-4 text-center font-medium">
-                                        This news has not been verified from any official source. <br />
-                                        It is created solely for educational purposes. Please refer to official sources for information. <br />
-                                        We will not be responsible for any legal issues that may arise.
-                                    </p>
-                                    <p className="mt-4 mb-6 text-center">
-                                        Contact:{" "}
-                                        <a
-                                            href="https://manoj-neupane.com.np"
-                                            className="text-blue-600 hover:text-blue-800 font-semibold underline"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            Manoj Neupane
-                                        </a>
-                                    </p>
-                                    <button
-                                        onClick={handleClose}
-                                        className="font-semibold bg-gray-300 py-3 px-8 rounded-xl text-red-800 hover:bg-gray-200 transition-all duration-300"
+            </div>
+        </div>
+    );
 
-                                    >
-                                        OK, Understand
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-
-
-                    )}
-                    
-                    {/* Marquee Section */}
-                    <div>
-                        <marquee
-                            className="text-blue-700 font-semibold bg-slate-50 p-2 rounded-md mx-5"
-                            direction="left"
-                            scrollamount="8"
-                            onMouseOver={(e) => e.target.stop()}
-                            onMouseOut={(e) => e.target.start()}
+    const CategoryTabs = () => (
+        <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex space-x-1 overflow-x-auto py-3 scrollbar-hide">
+                    {categories.map((category) => (
+                        <button
+                            key={category.id}
+                            onClick={() => setActiveCategory(category.id)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${activeCategory === category.id
+                                ? `bg-${category.color}-100 text-${category.color}-700 border border-${category.color}-300`
+                                : 'text-gray-600 hover:bg-gray-100'
+                                }`}
                         >
-                            भारत, उत्तर प्रदेशको प्रयागराजमा लागेको महाकुम्भ मेलामा सहभागी भएर फर्किँदै गरेको गाडी दुर्घटनामा पर्दा ५ जना नेपालीको मृत्यु भएको छ । मृतक ५ जना महोत्तरी जिल्लाको रहेको नेपाल प्रहरीले जनाएको छ ।
-                            कुम्भ मेलाबाट ९ जना नेपाली बोकेर फर्किरहेको भारतीय नम्बर बीआर ३२ पीए ४६६१ नम्बरको स्कर्पियो गाडी बिहारको मुज्जफरपुरमा साइकललाई बचाउने क्रममा अनियन्त्रित भएर सडकमा बजारिँदा ५ जना नेपाली नागरिकको मृत्यु भएको छ ।
-                        </marquee>
+                            <i className={`fa-solid ${category.icon} text-${category.color}-500`}></i>
+                            {category.name}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+    const NewsCard = ({ post, size = 'medium', showCategory = false }) => (
+        <Link
+            to={`/post/${post._id}`}
+            className="block group cursor-pointer transform transition-all duration-300 hover:scale-[1.02]"
+        >
+            <div className={`bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl ${size === 'large' ? 'h-96' : size === 'small' ? 'h-48' : 'h-64'
+                }`}>
+                <div className="relative h-2/3 overflow-hidden">
+                    <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    {showCategory && post.category && (
+                        <span className="absolute top-3 left-3 bg-white/90 text-gray-800 px-2 py-1 rounded-full text-xs font-bold">
+                            {post.category}
+                        </span>
+                    )}
+                    <div className="absolute bottom-3 left-3 right-3">
+                        <h3 className={`text-white font-bold line-clamp-2 ${size === 'large' ? 'text-xl' : size === 'small' ? 'text-sm' : 'text-base'
+                            }`}>
+                            {post.title}
+                        </h3>
                     </div>
-
-                    {/* Headline Section */}
-                    <section className=" px-5 my-10 md:px-20">
-                        {posts.slice(0, 2).map((post) => (
-                            <div key={post._id} className="py-5 px-5 md:px-20 text-center">
-                                <a target='blank' href={`/post/${post._id}`}>
-                                    <h1 className="text-6xl md:text-6xl text-blue-900 font-bold hover:text-blue-700 cursor-pointer">
-                                        {post.title}
-                                    </h1>
-                                </a>
-                                <div className="flex justify-center items-center mt-5">
-                                    <img
-                                        src={logo} // Use actual author image here
-                                        alt="Author"
-                                        className="h-12 w-12 rounded-full border-2 border-blue-600"
-                                    />
-                                    <p className="ml-3 text-gray-600">
-                                        <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </section>
-
-                    {/* add section */}
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto flex items-center justify-center">
-                        <Advertisement />
+                </div>
+                <div className="p-3">
+                    <p className="text-gray-600 text-xs line-clamp-2 mb-2">
+                        {post.content?.split(" ").slice(0, 20).join(" ")}...
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span className="flex items-center gap-1">
+                            <i className="far fa-clock"></i>
+                            {moment(post.createdAt).fromNow()}
+                        </span>
+                        <span className="flex items-center gap-1">
+                            <i className="far fa-eye"></i>
+                            १.२k
+                        </span>
                     </div>
-                    <section className="my-10 px-4 md:px-10">
-                        {posts.slice(3, 4).map((post) => (
-                            <div key={post._id} className="w-full mt-5 md:w-2/3 mx-auto border-b border-gray-300 pb-10">
-                                <h1 className="text-6xl mb-2 text-center text-blue-900 font-bold hover:text-blue-700 cursor-pointer">
-                                    {post.title}
-                                </h1>
+                </div>
+            </div>
+        </Link>
+    );
+
+    NewsCard.propTypes = {
+        post: PropTypes.object.isRequired,
+        size: PropTypes.oneOf(['small', 'medium', 'large']),
+        showCategory: PropTypes.bool
+    };
+
+    const FeaturedSection = () => (
+        <section className="py-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Main Featured News */}
+                    {posts.slice(0, 1).map((post) => (
+                        <Link key={post._id} to={`/post/${post._id}`} className="lg:col-span-2 group cursor-pointer">
+                            <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                                 <img
                                     src={post.image}
                                     alt={post.title}
-                                    className="rounded-lg bg-slate-100 w-full h-72 md:h-96 object-cover cursor-pointer"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
-                                <div className='text-center my-10'>
-                                    <p>
-                                        {post.content.split(" ").length > 30
-                                            ? post.content.split(" ").slice(0, 30).join(" ") + "..."
-                                            : post.content}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                                <div className="absolute bottom-6 left-6 right-6">
+                                    <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-3 inline-block">
+                                        मुख्य समाचार
+                                    </span>
+                                    <h1 className="text-3xl font-bold text-white leading-tight mb-2 line-clamp-2">
+                                        {post.title}
+                                    </h1>
+                                    <p className="text-gray-200 text-sm line-clamp-2">
+                                        {post.content?.split(" ").slice(0, 30).join(" ")}...
                                     </p>
-                                </div>
-
-                            </div>
-                        ))}
-                    </section>
-
-                    <section className="py-10 px-5 bg-gray-50 md:px-20 my-10 flex flex-col md:flex-row gap-4">
-                        {/* Main Story Section */}
-                        <div className="relative md:w-2/3 mb-10 md:mb-0">
-                            {posts.slice(4, 5).map((post) => (
-                                <div key={post._id} className="relative">
-                                    <img
-                                        src={post.image}
-                                        alt={post.title}
-                                        className="w-full h-96 object-cover rounded-lg border-4 border-gray-300"
-                                    />
-                                    <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-5 rounded-lg">
-                                        <h2 className="text-white text-lg md:text-3xl font-bold leading-snug">
-                                            {post.title}
-                                        </h2>
-                                        <p className="text-gray-300 mt-2 text-sm">
-                                            <i className="fa-regular fa-clock"></i> {post.timeAgo}
-                                        </p>
+                                    <div className="flex items-center gap-3 mt-3">
+                                        <div className="flex items-center gap-2">
+                                            <img
+                                                src={logo}
+                                                alt="Author"
+                                                className="w-8 h-8 rounded-full border-2 border-white"
+                                            />
+                                            <span className="text-white text-sm">समाचार टिम</span>
+                                        </div>
+                                        <span className="text-gray-300 text-sm">
+                                            <i className="far fa-clock mr-1"></i>
+                                            {moment(post.createdAt).fromNow()}
+                                        </span>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        </Link>
+                    ))}
 
-                        {/* Side News List */}
-                        <div className="flex flex-col gap-4 md:w-1/3  overflow-y-auto max-h-[380px]">
-                            {posts.slice(0, 10).map((post) => (
-                                <div key={post._id} className="flex gap-4">
+                    {/* Side Featured News */}
+                    <div className="space-y-4">
+                        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            <i className="fa-solid fa-fire text-red-500"></i>
+                            ताजा समाचार
+                        </h2>
+                        {posts.slice(1, 4).map((post) => (
+                            <Link key={post._id} to={`/post/${post._id}`} className="block group cursor-pointer">
+                                <div className="flex gap-3 bg-white rounded-xl p-3 shadow-lg hover:shadow-xl transition-all duration-300">
                                     <img
                                         src={post.image}
                                         alt={post.title}
-                                        className="w-28 h-20 object-cover rounded-md border-2 border-gray-300"
+                                        className="w-20 h-20 object-cover rounded-lg"
                                     />
-                                    <div className="flex flex-col justify-between">
-                                        <h3 className="text-gray-800 font-semibold text-sm md:text-base">
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors">
                                             {post.title}
                                         </h3>
-                                        <p className="text-gray-500 text-xs">
-                                            <i className="fa-regular fa-clock"></i> {post.timeAgo}
+                                        <p className="text-gray-500 text-xs mt-1">
+                                            <i className="far fa-clock mr-1"></i>
+                                            {moment(post.createdAt).fromNow()}
                                         </p>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* add section */}
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
+                            </Link>
+                        ))}
                     </div>
+                </div>
+            </div>
+        </section>
+    );
 
-                    {/* News Section */}
-                    <section className="py-5 px-5 md:px-20 bg-gray-50 border-b  border-gray-300 pb-10">
-                        <h1 className="text-blue-700 font-bold text-3xl mb-6">समाचार</h1>
-                        <div>
-                            {posts.slice(5, 6).map((post) => (
-                                <div
-                                    key={post._id}
-                                    className="bg-white py-2 px-3 rounded-sm shadow-sm flex gap-4"
-                                >
-                                    {/* News Thumbnail */}
-                                    <img
-                                        src={post.image}
-                                        alt={post.title}
-                                        className="h-60 w-1/2 border border-1 rounded-lg mb-4 object-cover"
-                                    />
-                                    <div>
-                                        <h2 className="font-semibold text-base text-black-600 hover:text-black-800 cursor-pointer mb-3">
-                                            {post.title}
-                                        </h2>
-                                        <p>{post.content}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2  w-2/3 lg:grid-cols-2 gap-5">
-                            {posts.slice(7, 15).map((post) => (
-                                <div
-                                    key={post._id}
-                                    className="bg-white py-2 px-3 rounded-sm shadow-sm flex gap-4"
-                                >
-                                    {/* News Thumbnail */}
-                                    <img
-                                        src={post.image}
-                                        // alt={post.title}
-                                        className="h-20 w-40 border border-1 rounded-lg mb-4 object-cover"
-                                    />
+    if (loading) {
+        return (
+            <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100'>
+                <Loading />
+            </div>
+        );
+    }
 
-                                    {/* News Title */}
-                                    <h2 className="font-semibold text-base text-black-600 hover:text-black-800 cursor-pointer mb-3">
-                                        <a target='blank' href={`/post/${post._id}`}>
-                                            {post.title || "Default Health Title"}
-                                        </a>
-                                    </h2>
-
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
-                    </div>
-                    {/* Health Section */}
-                    <section className="py-10 px-5 md:px-20 bg-gray-100 border-b  border-gray-300 pb-10">
-                        <h1 className="text-green-700 font-bold text-3xl mb-6"> स्वास्थ्य</h1>
-
-                        {posts.filter((post) => post.category?.toLowerCase() === "health").length === 0 ? (
-                            <p className="text-center text-gray-500 text-lg mt-10">हाल स्वास्थ्य सम्बन्धी कुनै समाचार उपलब्ध छैन।</p>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
-                                {posts
-                                    .filter((post) => post.category?.toLowerCase() === "health")
-                                    .slice(0, 4)
-                                    .map((post) => (
-                                        <div key={post._id} className="flex flex-col bg-white p-6 rounded-lg shadow-xl">
-                                            <img
-                                                src={post.image}
-                                                alt={post.title}
-                                                className="h-40 w-full rounded-lg mb-4 object-cover"
-                                            />
-                                            <h2 className="font-semibold text-xl text-green-600 hover:text-green-800 cursor-pointer mb-3">
-                                                {post.title}
-                                            </h2>
-                                            <p className="text-gray-600 text-sm mb-4">
-                                                {post.description || "Short description of the health news."}
-                                            </p>
-
-                                            <div className="flex items-center justify-between mt-auto">
-                                                <div className="flex items-center gap-3">
-                                                    <img
-                                                        src={post.author.profilePicture}
-                                                        alt="Author"
-                                                        className="h-10 w-10 rounded-full border-2 border-green-600"
-                                                    />
-                                                    <span className="text-gray-700 text-sm">{post.author.name}</span>
-                                                </div>
-                                                <p className="text-gray-500 text-xs">
-                                                    <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
+    return (
+        <>
+            {/* Disclaimer Modal */}
+            {visible && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4">
+                    <div className="bg-gradient-to-br from-white via-blue-50 to-gray-100 rounded-2xl shadow-2xl max-w-md w-full p-6 transform animate-scale-in">
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i className="fa-solid fa-triangle-exclamation text-red-600 text-2xl"></i>
                             </div>
-                        )}
-                    </section>
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
-                    </div>
-                    {/* Business Section */}
-                    <section className="py-10 px-5 md:px-20 bg-gray-100 border-b  border-gray-300 pb-10">
-                        <h1 className="text-blue-700 font-bold text-3xl mb-6">व्यापार समाचार</h1>
-
-                        {posts.filter((post) => post.category?.toLowerCase() === "business").length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {posts
-                                    .filter((post) => post.category?.toLowerCase() === "business")
-                                    .slice(0, 4)
-                                    .map((post) => (
-                                        <div key={post._id} className="bg-white p-5 rounded-lg shadow-lg flex flex-col">
-                                            <img
-                                                src={post.image}
-                                                alt={post.title}
-                                                className="h-48 w-full rounded-lg object-cover mb-4"
-                                            />
-                                            <h2 className="text-blue-700 font-semibold text-xl mb-2 cursor-pointer hover:text-blue-900">
-                                                {post.title}
-                                            </h2>
-                                            <p className="text-gray-600 text-sm mb-3">
-                                                {post.description || " समाचारको संक्षिप्त विवरण"}
-                                            </p>
-                                            <div className="flex items-center justify-between mt-auto">
-                                                <p className="text-gray-500 text-xs">
-                                                    <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
-                        ) : (
-                            <p className="text-center text-gray-500 text-lg mt-10">हाल व्यापार सम्बन्धी कुनै समाचार उपलब्ध छैन।</p>
-                        )}
-                    </section>
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
-                    </div>
-                    {/* Spotrs Secttion  */}
-                    <section className="py-10 px-5 md:px-20 bg-gray-50">
-                        <h1 className="text-red-600 font-bold text-3xl mb-6 flex items-center gap-3">
-                            <i className="fas fa-basketball-ball"></i> खेलकुद समाचार
-                        </h1>
-
-                        {posts.filter((post) => post.category?.toLowerCase() === "sports").length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {posts
-                                    .filter((post) => post.category?.toLowerCase() === "sports")
-                                    .slice(0, 6)
-                                    .map((post) => (
-                                        <div
-                                            key={post._id}
-                                            className="bg-white p-5 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
-                                        >
-                                            <div className="relative">
-                                                <img
-                                                    src={post.image}
-                                                    alt={post.title}
-                                                    className="h-48 w-full rounded-lg object-cover"
-                                                />
-                                                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-3 py-1 rounded-full">
-                                                    Sports
-                                                </span>
-                                            </div>
-                                            <h2 className="text-red-700 font-semibold text-xl mt-4 hover:text-red-900 cursor-pointer">
-                                                {post.title}
-                                            </h2>
-                                            <p className="text-gray-600 text-sm mt-2">
-                                                {post.description || "खेलकुद समाचारको संक्षिप्त विवरण"}
-                                            </p>
-                                            <div className="flex items-center justify-between mt-4">
-                                                <p className="text-gray-500 text-xs">
-                                                    <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
-                        ) : (
-                            <p className="text-center text-gray-500 text-lg mt-10">हाल खेलकुद सम्बन्धी कुनै समाचार उपलब्ध छैन।</p>
-                        )}
-                    </section>
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
-                    </div>
-                    {/* Finance section  */}
-                    <section className="py-10 px-5 md:px-20 bg-gray-50">
-                        <h1 className="text-blue-700 font-bold text-3xl mb-6 flex items-center gap-3">
-                            <i className="fas fa-chart-line"></i> वित्तीय समाचार
-                        </h1>
-
-                        {posts.filter((post) => post.category?.toLowerCase() === "finance").length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {posts
-                                    .filter((post) => post.category?.toLowerCase() === "finance")
-                                    .slice(0, 6)
-                                    .map((post) => (
-                                        <div
-                                            key={post._id}
-                                            className="bg-white p-6 rounded-lg shadow-lg border border-blue-200 transform transition-all hover:scale-105 hover:shadow-2xl"
-                                        >
-                                            <div className="relative">
-                                                <img
-                                                    src={post.image}
-                                                    alt={post.title}
-                                                    className="h-48 w-full rounded-lg object-cover"
-                                                />
-                                                <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
-                                                    Finance
-                                                </span>
-                                            </div>
-                                            <h2 className="text-blue-800 font-semibold text-xl mt-4 hover:text-blue-900 cursor-pointer">
-                                                {post.title}
-                                            </h2>
-                                            <p className="text-gray-600 text-sm mt-2">
-                                                {post.description || "वित्तीय समाचारको संक्षिप्त विवरण"}
-                                            </p>
-                                            <div className="flex items-center justify-between mt-4">
-                                                <p className="text-gray-500 text-xs">
-                                                    <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
-                        ) : (
-                            <p className="text-center text-gray-500 text-lg mt-10">हाल वित्तीय सम्बन्धी कुनै समाचार उपलब्ध छैन।</p>
-                        )}
-                    </section>
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
-                    </div>
-                    {/* Technology Section  */}
-                    <section className="py-10 px-5 md:px-20 bg-gray-900 text-white">
-                        <h1 className="text-green-400 font-bold text-3xl mb-6 flex items-center gap-3">
-                            <i className="fas fa-microchip"></i> प्रविधि समाचार
-                        </h1>
-
-                        {posts.filter((post) => post.category?.toLowerCase() === "technology").length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {posts
-                                    .filter((post) => post.category?.toLowerCase() === "technology")
-                                    .slice(0, 6)
-                                    .map((post) => (
-                                        <div
-                                            key={post._id}
-                                            className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 transform transition-all hover:scale-105 hover:shadow-2xl"
-                                        >
-                                            <div className="relative">
-                                                <img
-                                                    src={post.image}
-                                                    alt={post.title}
-                                                    className="h-48 w-full rounded-lg object-cover brightness-75"
-                                                />
-                                                <span className="absolute top-2 right-2 bg-green-500 text-black text-xs px-3 py-1 rounded-full">
-                                                    Tech
-                                                </span>
-                                            </div>
-                                            <h2 className="text-green-400 font-semibold text-xl mt-4 hover:text-green-300 cursor-pointer">
-                                                {post.title}
-                                            </h2>
-                                            <p className="text-gray-400 text-sm mt-2">
-                                                {post.description || "प्रविधिसँग सम्बन्धित समाचारको संक्षिप्त विवरण"}
-                                            </p>
-                                            <div className="flex items-center justify-between mt-4">
-                                                <p className="text-gray-500 text-xs">
-                                                    <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
-                        ) : (
-                            <p className="text-center text-gray-500 text-lg mt-10">
-                                हाल प्रविधिसँग सम्बन्धित कुनै समाचार उपलब्ध छैन।
+                            <h2 className="text-2xl font-bold text-red-600 mb-3">📢 महत्वपूर्ण सूचना</h2>
+                            <p className="text-gray-700 leading-relaxed mb-6">
+                                यो समाचार कुनै आधिकारिक स्रोतबाट प्रमाणित भएको होइन।
+                                शैक्षिक उद्देश्यका लागि मात्र सिर्जना गरिएको हो।
+                                कुनै कानुनी समस्याको लागि हामी जिम्मेवार हुने छैनौं।
                             </p>
-                        )}
-                    </section>
-
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
-                    </div>
-
-                    <Newsletter />
-
-                    {/* Opinion Section */}
-                    <section className="py-10 px-5 md:px-20 bg-gray-900 text-white">
-                        <h1 className="text-green-400 font-bold text-3xl mb-6 flex items-center gap-3">
-                            <i className="fas fa-comment-dots"></i> राय समाचार
-                        </h1>
-
-                        {posts.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {posts
-                                    .slice(0, 6)
-                                    .map((post) => (
-                                        <div
-                                            key={post._id}
-                                            className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 transform transition-all hover:scale-105 hover:shadow-2xl"
-                                        >
-                                            <div className="relative">
-                                                <img
-                                                    src={post.image}
-                                                    alt={post.title}
-                                                    className="h-48 w-full rounded-lg object-cover brightness-75"
-                                                />
-                                                <span className="absolute top-2 right-2 bg-green-500 text-black text-xs px-3 py-1 rounded-full">
-                                                    Opinion
-                                                </span>
-                                            </div>
-                                            <h2 className="text-green-400 font-semibold text-xl mt-4 hover:text-green-300 cursor-pointer">
-                                                <a href={`/posts/${post._id}`}>{post.title}</a>
-                                            </h2>
-                                            <p className="text-gray-400 text-sm mt-2">
-                                                {post.description || "प्रविधिसँग सम्बन्धित समाचारको संक्षिप्त विवरण"}
-                                            </p>
-                                            <div className="flex items-center justify-between mt-4">
-                                                <p className="text-gray-500 text-xs">
-                                                    <i className="far fa-clock"></i> {moment(post.createdAt).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                                <p className="text-yellow-800 text-sm">
+                                    सम्पर्क: {' '}
+                                    <a href="https://manoj-neupane.com.np"
+                                        className="font-semibold hover:underline"
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        Manoj Neupane
+                                    </a>
+                                </p>
                             </div>
-                        ) : (
-                            <p className="text-center text-gray-500 text-lg mt-10">हाल रायसँग सम्बन्धित कुनै समाचार उपलब्ध छैन।</p>
-                        )}
-                    </section>
+                            <button
+                                onClick={handleClose}
+                                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-8 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                            >
+                                बुझेँ, आगा बढाउनुहोस्
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
-                    {/* Advertisement Section */}
-                    <div className="bg-stone-200 py-5 w-2/3 mx-auto my-10 flex items-center justify-center">
-                        <Advertisement />
+            <main className="bg-gray-50 min-h-screen">
+                {/* Breaking News */}
+                <BreakingNews />
+
+                {/* Category Tabs */}
+                <CategoryTabs />
+
+                {/* Featured Section */}
+                <FeaturedSection />
+
+                {/* Advertisement */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                    <Advertisement />
+                </div>
+
+                {/* Main News Grid */}
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <i className="fa-solid fa-newspaper text-blue-600"></i>
+                            {activeCategory === 'all' ? 'सबै समाचार' :
+                                categories.find(cat => cat.id === activeCategory)?.name}
+                        </h2>
+                        <span className="text-gray-600 text-sm bg-gray-100 px-3 py-1 rounded-full">
+                            {filteredPosts.length} समाचार
+                        </span>
                     </div>
 
+                    {filteredPosts.length === 0 ? (
+                        <div className="text-center py-12">
+                            <i className="fa-solid fa-newspaper text-6xl text-gray-300 mb-4"></i>
+                            <p className="text-gray-500 text-lg">हाल कुनै समाचार उपलब्ध छैन</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {filteredPosts.slice(0, 12).map((post, index) => (
+                                <NewsCard
+                                    key={post._id}
+                                    post={post}
+                                    size={index === 0 ? 'large' : 'medium'}
+                                    showCategory={true}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </section>
 
-                </main >
-            )}
+                {/* Category Sections */}
+                {categories.slice(1).map((category) => {
+                    const categoryPosts = posts.filter(post =>
+                        post.category?.toLowerCase() === category.id
+                    ).slice(0, 4);
+
+                    if (categoryPosts.length === 0) return null;
+
+                    return (
+                        <section key={category.id} className={`py-12 ${category.id === 'technology' ? 'bg-gray-900' : 'bg-white'
+                            }`}>
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className={`text-3xl font-bold flex items-center gap-3 ${category.id === 'technology' ? 'text-white' : `text-${category.color}-700`
+                                        }`}>
+                                        <i className={`fa-solid ${category.icon}`}></i>
+                                        {category.name}
+                                    </h2>
+                                    <Link
+                                        to={`/${category.id}`}
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${category.id === 'technology'
+                                            ? 'bg-gray-800 text-white hover:bg-gray-700'
+                                            : `bg-${category.color}-100 text-${category.color}-700 hover:bg-${category.color}-200`
+                                            }`}
+                                    >
+                                        सबै हेर्नुहोस्
+                                        <i className="fa-solid fa-arrow-right"></i>
+                                    </Link>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {categoryPosts.map((post, index) => (
+                                        <NewsCard
+                                            key={post._id}
+                                            post={post}
+                                            size={index === 0 ? 'large' : 'small'}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    );
+                })}
+
+                {/* Final Advertisement */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <Advertisement />
+                </div>
+
+                {/* Newsletter */}
+                <div className="bg-gradient-to-r from-blue-600 to-purple-700 py-12">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <Newsletter />
+                    </div>
+                </div>
+            </main>
+
+            <style>{`
+                .animate-marquee {
+                    animation: marquee 30s linear infinite;
+                }
+                
+                @keyframes marquee {
+                    0% { transform: translateX(100%); }
+                    100% { transform: translateX(-100%); }
+                }
+                
+                .line-clamp-2 {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+                
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                
+                @keyframes scale-in {
+                    0% { transform: scale(0.9); opacity: 0; }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+                
+                .animate-scale-in {
+                    animation: scale-in 0.3s ease-out;
+                }
+            `}</style>
         </>
-    )
-};
+    );
+}
+
 export default Home;

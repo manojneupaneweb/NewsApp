@@ -1,4 +1,4 @@
-import * as React from "react";
+// import * as from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -39,6 +39,7 @@ import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
 
 const baseURL ='https://news-app-pi-lyart.vercel.app/';
+// const baseURL ='http://localhost:3000';
   // import.meta.env.REACT_APP_API_NODE_ENV === "development"
   //   ? import.meta.env.REACT_APP_API_DEVELOPMENT_URL
   //   : import.meta.env.REACT_APP_API_PRODUCTION_URL;

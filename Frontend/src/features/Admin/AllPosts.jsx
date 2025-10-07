@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 
 function AllPosts() {
     const [posts, setPosts] = useState([]);
     const [allPost, setAllPost] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPosts, setFilteredPosts] = useState([]);
+    const navigate = useNavigate();
 
     const handleEdit = (id) => {
         navigate(`/admin/editpost/${id}`);
@@ -93,7 +94,7 @@ function AllPosts() {
                                 {post.image && <img src={post.image} alt={post.title} className="w-full h-auto rounded" />}
                             </div>
                             <div className="post-content w-3/4 ml-4">
-                                <h3 className="text-xl font-bold">{post.title.length > 50 ? `${post.title.slice(0, 50)}...` : post.title}</h3>
+                                <h3 className=" font-bold">{post.title.length > 50 ? `${post.title.slice(0, 20)}...` : post.title}</h3>
                                 <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</p>
                                 <p className="text-gray-700 mt-2">{post.content.slice(0, 100)}...</p>
                                 <div className="mt-4 flex justify-between">
@@ -112,13 +113,13 @@ function AllPosts() {
                 <div className='flex flex-wrap'>
                     {allPost.map((post) => (
                         <div key={post._id} className="post-item mb-4 p-4 border rounded w-56 m-2">
-                            {post.image && <img src={post.image} alt={post.title} className="w-40 h-auto rounded mb-2" />}
-                            <h3 className="text-xl font-bold">{post.title.length > 50 ? `${post.title.slice(0, 30)}...` : post.title}</h3>
+                            {post.image && <img src={post.image} alt={post.title} className="w-40 h-24 rounded mb-2" />}
+                            <h3 className=" font-bold">{post.title.length > 50 ? `${post.title.slice(0, 30)}...` : post.title}</h3>
                             <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</p>
-                            <p className="text-gray-700 mt-2">{post.content.length > 50 ? `${post.content.slice(0, 30)}...` : post.title}</p>
+                            <p className="text-gray-700 mt-2">{post.content.length > 50 ? `${post.content.slice(0, 20)}...` : post.title}</p>
                             <div className="mt-2 flex justify-between">
-                                <Link to={`/admin/editpost/${post._id}`} className="ms-2 text-black font-bold bg-blue-500 hover:bg-cyan-600 p-2 block rounded-md">Edit</Link>
-                                <button onClick={() => deletePost(post._id)} className="ms-2 text-black font-bold bg-red-500 hover:bg-cyan-600 p-2 block rounded-md">Delete</button>
+                                <Link to={`/admin/editpost/${post._id}`} className="ms-2 text-black font-bold bg-blue-500 hover:bg-cyan-600 px-4 py-2 block rounded-md">Edit</Link>
+                                <button onClick={() => deletePost(post._id)} className="ms-2 text-black font-bold bg-red-500 hover:bg-cyan-600 px-4 py-2 block rounded-md">Delete</button>
                             </div>
                         </div>
                     ))}

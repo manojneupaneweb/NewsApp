@@ -4,6 +4,7 @@ import { asyncHandler } from "../Utils/asyncHandler.util.js"
 import { ApiError } from "../Utils/apiError.util.js"
 import { ApiResponse } from "../Utils/apiResponse.util.js"
 import { uploadOnCloudinary, deleteFromCloudinary } from '../Utils/cloudiny.util.js';
+import axios from 'axios'
 
 const createpost = asyncHandler(async (req, res) => {
   const { title, content, category, tags } = req.body;
@@ -95,17 +96,17 @@ const editpost = async (req, res, next) => {
 };
 
 const getPostById = asyncHandler(async (req, res) => {
-  const postId = req.params.id;  
-  
+  const postId = req.params.id;
+
   const post = await Post.findById(postId)
-  .populate('author', '-password -refreshToken -isOtpVerified -phone _id -createdAt -email -updatedAt')
+    .populate('author', '-password -refreshToken -isOtpVerified -phone _id -createdAt -email -updatedAt')
 
 
-if (!post) {
-  return res.status(404).json({ message: 'Post not found' });
-}
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' });
+  }
 
-return res.json(post);
+  return res.json(post);
 
 });
 
@@ -153,10 +154,12 @@ const getAllPosts = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch Posts", error: error.message });
   }
 });
+
 const getPostsByCategory = asyncHandler(async (req, res) => {
   const category = req.params.category;
   const posts = await Post.find({ category: { $regex: category, $options: "i" } })
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .populate("author", "name profilePicture");
 
   if (!posts || posts.length === 0) {
     return res.status(404).json({ message: 'No posts found for this category' });
@@ -166,9 +169,27 @@ const getPostsByCategory = asyncHandler(async (req, res) => {
 });
 
 
+const waitherInformation = asyncHandler(async (req, res) => {
+  const apikey = '14628d06527ef42ac6d977adef12a65b';
+  const weatherRes = await axios.get(
+    `https://api.openweathermap.org/data/2.5/weather?q=Kathmandu&appid=${apikey}&units=metric&lang=ne`
+  );
+
+  // Air quality
+  const airRes = await axios.get(
+    `https://api.openweathermap.org/data/2.5/air_pollution?lat=27.7172&lon=85.3240&appid=${apikey}`
+  );
+
+  res.json({
+    temp: weatherRes.data.main.temp,
+    city: weatherRes.data.name,
+    aqi: airRes.data.list[0].main.aqi,
+  });
+});
+
 
 
 
 export {
-  createpost, editpost, deletepost, getAllPosts, getPostById, getPostsByCategory, deleteAllPosts
+  createpost, editpost, deletepost, getAllPosts, getPostById, getPostsByCategory, deleteAllPosts, waitherInformation
 }

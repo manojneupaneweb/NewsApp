@@ -1,49 +1,78 @@
-import React, { useState, useEffect } from "react";
-import NepaliDate from "nepali-date-converter"; // Ensure this package is installed
+import { useState, useEffect } from "react";
+import NepaliDate from "nepali-date-converter";
 
 export function DateAndTime() {
-    const [nepaliDateTime, setNepaliDateTime] = useState({
-        date: "",
-        time: "",
-    });
+  const [dateTime, setDateTime] = useState({
+    nepali: "",
+    english: "",
+    weekNp: "",
+    weekEn: "",
+    time: "",
+  });
 
-    useEffect(() => {
-        const updateDateTime = () => {
-            const now = new Date();
-            const nepaliDate = new NepaliDate(now);
-            const dayOfWeek = [
-                "आइतबार",
-                "सोमबार",
-                "मंगलबार",
-                "बुधबार",
-                "बिहीबार",
-                "शुक्रबार",
-                "शनिबार",
-            ];
+  const toNepaliNumber = (num) => {
+    const nepaliDigits = ["०","१","२","३","४","५","६","७","८","९"];
+    return num.toString().split("").map(d => nepaliDigits[+d] || d).join("");
+  };
 
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds}`;
+  const nepaliMonths = [
+    "बैशाख", "जेठ", "असार", "साउन", "भदौ", "आश्विन",
+    "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुन", "चैत्र"
+  ];
 
-            setNepaliDateTime({
-                date: `${nepaliDate.format("YYYY/MM/DD")}`,
-                week: `${dayOfWeek[now.getDay()]}`,
-                time: formattedTime,
-            });
-        };
+  const dayOfWeekNepali = [
+    "आइतबार",
+    "सोमबार",
+    "मंगलबार",
+    "बुधबार",
+    "बिहीबार",
+    "शुक्रबार",
+    "शनिबार",
+  ];
 
-        updateDateTime(); // Initial call
-        const interval = setInterval(updateDateTime, 1000);
+  useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date();
+      const nepaliDate = new NepaliDate(now);
 
-        return () => clearInterval(interval);
-    }, []);
+      const nepaliFormatted = `${toNepaliNumber(nepaliDate.getDate())} ${nepaliMonths[nepaliDate.getMonth()]} ${toNepaliNumber(nepaliDate.getYear())}`;
 
-    return (
-        <div className="font-semibold">
-            <p>{nepaliDateTime.date}</p>
-            <p>{nepaliDateTime.week}</p>
-            <p>{nepaliDateTime.time}</p>
-        </div>
-    );
+      const englishFormatted = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      const hours = toNepaliNumber(now.getHours());
+      const minutes = toNepaliNumber(now.getMinutes());
+      const seconds = toNepaliNumber(now.getSeconds());
+      const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+      setDateTime({
+        nepali: nepaliFormatted,
+        english: englishFormatted,
+        weekNp: dayOfWeekNepali[now.getDay()],
+        weekEn: now.toLocaleDateString("en-US", { weekday: "long" }),
+        time: formattedTime,
+      });
+    };
+
+    updateDateTime();
+    const interval = setInterval(updateDateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="font-semibold text-center flex flex-col items-center">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Flag_of_Nepal.svg"
+        alt="Nepal Flag"
+        className="w-10 h-10 mb-2"
+      />
+      <p>{dateTime.nepali} {dateTime.weekNp}</p>
+      <p>{dateTime.english}</p>
+      <p>{dateTime.time}</p>
+    </div>
+  );
 }

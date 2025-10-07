@@ -6,7 +6,6 @@ const userSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true
     },
     email: {
         type: String,
@@ -53,7 +52,7 @@ userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-            phone:this.phone,
+            phone: this.phone,
             email: this.email,
             name: this.name
         },
@@ -64,7 +63,7 @@ userSchema.methods.generateAccessToken = function () {
     )
 }
 userSchema.methods.generateRefreshToken = function () {
-    
+
     return jwt.sign(
         {
             _id: this._id,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
@@ -17,7 +17,7 @@ const Dashboard = () => {
       const response = await axios.get(`/api/v1/users/allUsers`);
       setAllUser(response.data.users || []);
     } catch (error) {
-      setError("Failed to fetch users.");
+      setError("Failed to fetch users.", error);
     } finally {
       setLoading(false);
     }
@@ -28,7 +28,7 @@ const Dashboard = () => {
       const response = await axios.get(`/api/v1/posts/getallposts`);
       setAllPost(response.data.posts || []);
     } catch (error) {
-      setError("Failed to fetch posts.");
+      setError("Failed to fetch posts.", error);
     } finally {
       setLoading(false);
     }
@@ -86,25 +86,27 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Users & Posts */}
-      <div className="mt-6 w-max">
-        <h3 className="text-xl font-semibold mb-3">Recent Users</h3>
-        <ul className="bg-white p-4 rounded-lg shadow-md">
-          {allUser.slice(0, 5).map((user) => (
-            <li key={user._id} className="py-2 border-b">
-              {user.name} - {user.role}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mt-6">
-        <h3 className="text-xl font-semibold mb-3">Recent Posts</h3>
-        <ul className="bg-white p-4 rounded-lg shadow-md">
-          {allPost.slice(0, 5).map((post) => (
-            <li key={post._id} className="py-2 border-b">
-              {post.title}
-            </li>
-          ))}
-        </ul>
+      <div className="flex  gap-5">
+        <div className="mt-6 w-max">
+          <h3 className="text-xl font-semibold mb-3">Recent Users</h3>
+          <ul className="bg-white p-4 rounded-lg shadow-md">
+            {allUser.slice(0, 5).map((user) => (
+              <li key={user._id} className="py-2 border-b">
+                {user.name} - {user.role}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mt-6">
+          <h3 className="text-xl font-semibold mb-3">Recent Posts</h3>
+          <ul className="bg-white p-4 rounded-lg shadow-md">
+            {allPost.slice(0, 5).map((post) => (
+              <li key={post._id} className="py-2 border-b">
+                {post.title}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

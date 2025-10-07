@@ -3,9 +3,11 @@ import { asyncHandler } from "../Utils/asyncHandler.util.js"
 import { ApiError } from "../Utils/apiError.util.js"
 import { ApiResponse } from "../Utils/apiResponse.util.js"
 import { uploadOnCloudinary } from "../Utils/cloudiny.util.js"
-import { sendremail } from "../Middlewares/emailVerification.js"
+import { sendemail } from "../Middlewares/emailVerification.js"
 import { Option } from "../Utils/option.util.js"
 import jwt from "jsonwebtoken"
+import { Otp } from "../Models/otp.model.js"
+
 
 const generateAccessRefreshToken = async (userId) => {
 
@@ -51,7 +53,6 @@ const registerUser = asyncHandler(async (req, res) => {
         profilePicture: profilePictureUrl,
     });
 
-    console.log("user created", user.name, user.email);
 
     res.status(201).json(
         new ApiResponse(201, "User created successfully", { userId: user._id })
@@ -59,18 +60,87 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-const otpverification = asyncHandler(async (req, res) => {
-    sendremail()
-        .then(() => {
-            res
-                .status(201)
-                .json(201, "OTP send")
-        })
-        .catch((err) => {
-            throw new ApiError(500, "Failed to send OTP")
+const sendOtp = asyncHandler(async (req, res) => {
+    const { email } = req.body;
 
-        })
-})
+    if (!email) {
+        throw new ApiError(400, "Email is required");
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        throw new ApiError(400, "User already exists");
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    await Otp.create({
+        otp,
+        email,
+        otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
+    });
+
+    const subject = "Your OTP for NewsApp Registration";
+    const html = `
+        <div style="font-family: Arial, sans-serif; background: #f9fafb; padding: 40px; color: #333;">
+            <div style="max-width: 500px; margin: 0 auto; background: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <h2 style="text-align: center; color: #2563eb;">🔐 Email Verification - TechSphere</h2>
+            <p style="font-size: 16px; line-height: 1.6;">Hello,</p>
+            <p style="font-size: 16px; line-height: 1.6;">
+                Thank you for signing up with <b>TechSphere</b>. To complete your registration, please use the OTP code below:
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+                <span style="display: inline-block; background: #2563eb; color: #ffffff; font-size: 28px; font-weight: bold; letter-spacing: 5px; padding: 15px 25px; border-radius: 8px;">
+                ${otp}
+                </span>
+            </div>
+            <p style="font-size: 15px; line-height: 1.6; color: #555;">
+                ⚠️ This OTP is valid for only <b>5 minutes</b>. Please do not share it with anyone.
+            </p>
+            <hr style="margin: 25px 0; border: none; border-top: 1px solid #eee;" />
+            <p style="font-size: 14px; color: #777; text-align: center;">
+                If you didn’t request this verification, you can safely ignore this email.
+            </p>
+            <p style="font-size: 14px; color: #555; text-align: center; margin-top: 20px;">
+                – The <b>TechSphere Team</b>
+            </p>
+            </div>
+        </div>
+    `;
+
+
+    await sendemail(email, subject, html);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, { message: "OTP sent successfully", email }));
+});
+
+const verifyOtp = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        if (!email || !otp) {
+            return res.status(400).json({ message: "Email and OTP are required" });
+        }
+
+        const otpDoc = await Otp.findOne({ email, otp });
+        if (!otpDoc) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        if (otpDoc.otpExpiry < new Date()) {
+            await Otp.deleteOne({ email });
+            return res.status(400).json({ message: "OTP expired" });
+        }
+
+        await Otp.deleteOne({ email });
+        return res.status(200).json({ success: true, message: "OTP verified" });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Error verifying OTP" });
+    }
+};
+
 
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -198,7 +268,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
     try {
         const user = await User.findById(userId).select("-password -refreshToken");
-        
+
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
@@ -213,7 +283,8 @@ const getUserById = asyncHandler(async (req, res) => {
 export {
     registerUser,
     loginUser,
-    otpverification,
+    sendOtp,
+    verifyOtp,
     logutUser,
     getUserProfile,
     refreshAccessToken,

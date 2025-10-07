@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../Middlewares/multer.js"
-import { loginUser, otpverification, registerUser, logutUser, getUserProfile, refreshAccessToken, getAllUsers, getUserById } from "../Controllers/user.controller.js";
+import { loginUser, registerUser, logutUser, getUserProfile, refreshAccessToken, getAllUsers, getUserById, sendOtp, verifyOtp } from "../Controllers/user.controller.js";
 import { verifyJwt } from "../Middlewares/auth.middleware.js";
 
 
@@ -8,7 +8,8 @@ const userRoute = Router();
 userRoute.route("/register").post(upload.fields([
     { name: "profilePicture", maxCount: 1 }
 ]), registerUser)
-userRoute.route("/otpverification").post(otpverification);
+userRoute.route("/sendotp").post(sendOtp);
+userRoute.route("/verifyotp").post(verifyOtp);
 userRoute.route("/loginUser").post(loginUser);
 
 //secured route

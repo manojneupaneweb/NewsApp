@@ -7,6 +7,7 @@ import { getOneUser, Logout } from "../utils/User.Fetching";
 import { DateAndTime } from "./DateAndTime";
 import axios from "axios";
 
+
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -105,6 +106,7 @@ function Header() {
         <div className={`bg-white shadow-lg transition-all duration-300 ${isScrolled ? 'py-2 shadow-xl' : 'py-4'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+             
 
               {/* Date and Time */}
               <div className="text-center lg:text-right">

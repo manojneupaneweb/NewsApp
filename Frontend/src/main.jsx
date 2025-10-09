@@ -40,26 +40,9 @@ import Finance from "./features/Pages/nav/Finance.jsx";
 import TagPage from "./features/Pages/TagPage.jsx";
 import CategoryPage from "./features/Pages/CategoryPage.jsx";
 
-// const baseURL ='https://news-app-pi-lyart.vercel.app/';
-// const baseURL ='http://localhost:3000';
-
-
-const environment = import.meta.env.REACT_APP_API_NODE_ENV
 const Production_url = import.meta.env.REACT_APP_API_PRODUCTION_URL
-const Development_url = import.meta.env.REACT_APP_API_DEVELOPMENT_URL
 
-
-let baseURL = '';
-baseURL = environment === "development"
-  ? Development_url
-  : Production_url;
-
-if (environment === "development") {
-  console.log('env:', environment);
-  console.log('pro url:', Production_url);
-  console.log('dev url:', Development_url);
-  console.log('baseURL currently working on:', baseURL);
-}
+const baseURL = Production_url;
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;

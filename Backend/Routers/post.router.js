@@ -7,7 +7,8 @@ import {
     getPostById,
     getPostsByCategory,
     deleteAllPosts,
-    waitherInformation
+    waitherInformation,
+    getPostsByTag
 } from "../Controllers/post.controller.js";
 import { verifyJwt } from "../Middlewares/auth.middleware.js";
 import { upload } from "../Middlewares/multer.js";
@@ -36,6 +37,7 @@ router.route("/editpost/:id").put(
 router.route('/waither').get(waitherInformation)
 
 router.route("/getpostbyid/:id").get(getPostById);
+router.route("/getpostbytag/:tag").get(getPostsByTag);
 router.route("/getpostbycategory/:category").get(getPostsByCategory);
 
 router.route("/deletepost/:id").delete(verifyJwt, deletepost);

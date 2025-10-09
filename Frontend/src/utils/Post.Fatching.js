@@ -21,10 +21,19 @@ export const fetchPostById = async (postId) => {
         throw error;
     }
 };
+export const fetchPostByTag = async (postId) => {
+    try {
+        const response = await axios.get(`/api/v1/posts/getpostbytag/${postId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching post by ID:', error);
+        throw error;
+    }
+};
 
 // Fetch posts by category
 export const fetchPostsByCategory = async (category) => {
-    try {
+    try {        
         const response = await axios.get(`/api/v1/posts/getpostbycategory/${category}`);
         return response.data;
     } catch (error) {

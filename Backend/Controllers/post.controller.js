@@ -9,8 +9,6 @@ import axios from 'axios'
 const createpost = asyncHandler(async (req, res) => {
   const { title, content, category, tags } = req.body;
 
-  console.log("Received Data:", { title, content, category, tags });
-
   if ([title, content, category].some((field) => !field || field.trim() === "")) {
     throw new ApiError(400, "All fields (title, content, and category) are required");
   }
@@ -20,7 +18,6 @@ const createpost = asyncHandler(async (req, res) => {
   }
 
   const localFilePath = req.files.image[0].path;
-  console.log("Image Path:", localFilePath);
 
   const postImageUrl = await uploadOnCloudinary(localFilePath);
 
@@ -99,15 +96,47 @@ const getPostById = asyncHandler(async (req, res) => {
   const postId = req.params.id;
 
   const post = await Post.findById(postId)
-    .populate('author', '-password -refreshToken -isOtpVerified -phone _id -createdAt -email -updatedAt')
-
+    .populate(
+      'author',
+      '-password -refreshToken -isOtpVerified -phone -_id -createdAt -email -updatedAt'
+    );
 
   if (!post) {
     return res.status(404).json({ message: 'Post not found' });
   }
 
-  return res.json(post);
+  const relatedPosts = await Post.find({
+    _id: { $ne: postId }, 
+    $or: [
+      { category: post.category },
+      { tags: { $in: post.tags } }
+    ]
+  })
+    .limit(6)
+    .populate(
+      'author',
+      '-password -refreshToken -isOtpVerified -phone -_id -createdAt -email -updatedAt'
+    );
 
+  return res.json({ post, relatedPosts });
+});
+
+
+const getPostsByTag = asyncHandler(async (req, res) => {
+  const tag = req.params.tag;
+
+  const posts = await Post.find({
+    tags: { $regex: new RegExp(tag, "i") }
+  })
+    .populate(
+      'author',
+      '-password -refreshToken -isOtpVerified -phone -_id -createdAt -email -updatedAt'
+    );
+  if (!posts || posts.length === 0) {
+    return res.status(404).json({ message: 'No posts found for this tag' });
+  }
+
+  return res.json(posts);
 });
 
 
@@ -136,6 +165,7 @@ const deletepost = asyncHandler(async (req, res) => {
   return res.json(new ApiResponse(200, "Post deleted successfully"));
 });
 
+
 const deleteAllPosts = asyncHandler(async (req, res) => {
   try {
     // Using deleteMany to remove all posts
@@ -146,6 +176,7 @@ const deleteAllPosts = asyncHandler(async (req, res) => {
   }
 });
 
+
 const getAllPosts = asyncHandler(async (req, res) => {
   try {
     const posts = await Post.find();
@@ -155,11 +186,15 @@ const getAllPosts = asyncHandler(async (req, res) => {
   }
 });
 
+
 const getPostsByCategory = asyncHandler(async (req, res) => {
   const category = req.params.category;
-  const posts = await Post.find({ category: { $regex: category, $options: "i" } })
-    .sort({ createdAt: -1 })
-    .populate("author", "name profilePicture");
+  const posts = await Post.find({
+    category: { $regex: new RegExp(`^${category}$`, 'i') }
+  }).populate(
+    'author',
+    '-password -refreshToken -isOtpVerified -phone -_id -createdAt -email -updatedAt'
+  );
 
   if (!posts || posts.length === 0) {
     return res.status(404).json({ message: 'No posts found for this category' });
@@ -191,5 +226,5 @@ const waitherInformation = asyncHandler(async (req, res) => {
 
 
 export {
-  createpost, editpost, deletepost, getAllPosts, getPostById, getPostsByCategory, deleteAllPosts, waitherInformation
+  createpost, editpost, deletepost, getAllPosts, getPostById, getPostsByTag, getPostsByCategory, deleteAllPosts, waitherInformation
 }

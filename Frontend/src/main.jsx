@@ -37,6 +37,8 @@ import Profile from './features/UserProfile/Profile.jsx'
 import PostPage from "./features/Pages/PostPage.jsx";
 import PageNotFound from "./features/Pages/PageNotFound.jsx";
 import Finance from "./features/Pages/nav/Finance.jsx";
+import TagPage from "./features/Pages/TagPage.jsx";
+import CategoryPage from "./features/Pages/CategoryPage.jsx";
 
 // const baseURL ='https://news-app-pi-lyart.vercel.app/';
 // const baseURL ='http://localhost:3000';
@@ -52,11 +54,12 @@ baseURL = environment === "development"
   ? Development_url
   : Production_url;
 
-
-console.log('env:', environment);
-console.log('pro url:', Production_url);
-console.log('dev url:', Development_url);
-console.log('baseURL currently working on:', baseURL);
+if (environment === "development") {
+  console.log('env:', environment);
+  console.log('pro url:', Production_url);
+  console.log('dev url:', Development_url);
+  console.log('baseURL currently working on:', baseURL);
+}
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
@@ -100,6 +103,8 @@ const router = createBrowserRouter([
       { path: "sports", element: <Sports /> },
       { path: "opinion", element: <Opinion /> },
       { path: "post/:postId", element: <PostPage /> },
+      { path: "post/tag/:tag", element: <TagPage /> },
+      { path: "post/category/:category", element: <CategoryPage /> },
       { path: "*", element: <PageNotFound /> },
 
       {
